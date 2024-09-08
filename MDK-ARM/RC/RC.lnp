@@ -1,12 +1,11 @@
 --cpu=Cortex-M4.fp.sp
 "rc\startup_stm32f427xx.o"
+"rc\maincpp.o"
 "rc\main.o"
 "rc\stm32f4xx_it.o"
 "rc\stm32f4xx_hal_msp.o"
 "rc\stm32f4xx_hal_timebase_tim.o"
-"rc\maincpp.o"
-"rc\stm32f4xx_hal_tim.o"
-"rc\stm32f4xx_hal_tim_ex.o"
+"rc\stm32f4xx_hal_can.o"
 "rc\stm32f4xx_hal_rcc.o"
 "rc\stm32f4xx_hal_rcc_ex.o"
 "rc\stm32f4xx_hal_flash.o"
@@ -20,7 +19,10 @@
 "rc\stm32f4xx_hal_cortex.o"
 "rc\stm32f4xx_hal.o"
 "rc\stm32f4xx_hal_exti.o"
+"rc\stm32f4xx_hal_tim.o"
+"rc\stm32f4xx_hal_tim_ex.o"
 "rc\system_stm32f4xx.o"
+"rc\motor.o"
 --strict --scatter "RC\RC.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

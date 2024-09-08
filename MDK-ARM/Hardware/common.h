@@ -14,4 +14,6 @@
 #include "stm32f4xx_hal.h"
 #include "motor.h"
 
+extern CAN_HandleTypeDef hcan1;
+extern CAN_HandleTypeDef hcan2;
 #endif
