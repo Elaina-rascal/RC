@@ -15,10 +15,9 @@ namespace Motor
     public:
         void bind_pin();
         MotorInterface_t(uint8_t id, CAN_HandleTypeDef *hcan, uint8_t *common_buffer, bool HavePermission = false) : _id(id),
-                                                                                                                     _hcan(hcan), _common_buffer(common_buffer), HaveTxPermission(HavePermission)
-        {
-            HAL_CAN_Start(_hcan);
-        };
+                                                                                                                     _hcan(hcan), _common_buffer(common_buffer), HaveTxPermission(HavePermission) {
+                                                                                                                         // HAL_CAN_Start(_hcan);
+                                                                                                                     };
         void ControlOutput(int16_t control);
 
     protected:
