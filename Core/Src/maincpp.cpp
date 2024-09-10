@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:26:13
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-09 12:50:46
+ * @LastEditTime: 2024-09-10 18:28:59
  * @FilePath: \MDK-ARMg:\project\stm32\f427iih6\RC\Core\Src\maincpp.cpp
  * @Description:
  *
@@ -12,18 +12,19 @@
 uint8_t common_buffer[8] = {0};
 Motor::MotorInterface_t motor(1, &hcan1, common_buffer, true);
 void can_filter_init(CAN_HandleTypeDef *_hcan);
+void Configure_Filter(void);
 int main_cpp()
 {
-		HAL_Delay(1000);
-	
-    can_filter_init(&hcan1);
-    HAL_CAN_Start(&hcan1);
-//    can_filter_init(&hcan2);
-//    //   HAL_Delay(50);
-//    HAL_CAN_Start(&hcan2);
+    // HAL_Delay(1000);
+
+    // can_filter_init(&hcan1);
+    // HAL_CAN_Start(&hcan1);
+    // can_filter_init(&hcan2);
+    // HAL_CAN_Start(&hcan2);
+    Configure_Filter();
     while (1)
     {
-        motor.ControlOutput(1000);
+        motor.ControlOutput(100);
         HAL_Delay(1);
     }
     return 0;
@@ -54,11 +55,56 @@ void can_filter_init(CAN_HandleTypeDef *_hcan)
         {
             Error_Handler();
         }
-			CAN_FilterConfigStructure.FilterBank = 14;
-			if (HAL_CAN_ConfigFilter(_hcan, &CAN_FilterConfigStructure) != HAL_OK)
-			{
-					Error_Handler();
-			}
-       // HAL_CAN_ActivateNotification(_hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
+        CAN_FilterConfigStructure.FilterBank = 14;
+        if (HAL_CAN_ConfigFilter(_hcan, &CAN_FilterConfigStructure) != HAL_OK)
+        {
+            Error_Handler();
+        }
+        HAL_CAN_ActivateNotification(_hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
+    }
+}
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) // CAN接收中断
+{
+    CAN_RxHeaderTypeDef rx_header;
+    uint8_t rx_data[8];
+    HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
+    switch (rx_header.StdId)
+    {
+
+    default:
+    {
+        break;
+    }
+    }
+}
+void Configure_Filter(void)
+{
+    CAN_FilterTypeDef sFilterConfig;
+    sFilterConfig.FilterIdHigh = 0x0000;
+    sFilterConfig.FilterIdLow = 0x0000;
+    sFilterConfig.FilterMaskIdHigh = 0x0000;
+    sFilterConfig.FilterMaskIdLow = 0x0000;
+    sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0; // 把接收到的报文放入到FIFO0
+    sFilterConfig.FilterBank = 0;
+    sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+    sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+    sFilterConfig.FilterActivation = ENABLE;
+    // sFilterConfig.SlaveStartFilterBank = 14;//为从CAN实例选择启动筛�?�器组�?�对于单个CAN实例，此参数没有意义。对于双CAN实例，所有具有较低索引的过滤器组都被分配给主CAN实例，�?�所有具有较大索引的过滤器组都被分配给从CAN实例。该参数必须为Min_Data = O和Max_Data =27之间的一个数�?.
+
+    if (HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig) != HAL_OK) // creat CanFilter
+    {
+        // HAL_GPIO_WritePin(GPIOG, GPIO_PIN_9, GPIO_PIN_RESET);
+        Error_Handler(); //_Error_Handler(__FILE__, __LINE__);
+    }
+    if (HAL_CAN_Start(&hcan1) != HAL_OK) // initialize can
+    {
+        // HAL_GPIO_WritePin(GPIOG, GPIO_PIN_9, GPIO_PIN_RESET);
+        Error_Handler(); //_Error_Handler(__FILE__, __LINE__);
+    }
+    // 当FIFO0中有消息的时候进入中
+    if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK) // The FIFO0 receive interrupt function was enabled
+    {
+        // HAL_GPIO_WritePin(GPIOG, GPIO_PIN_9, GPIO_PIN_RESET);
+        Error_Handler(); //_Error_Handler(__FILE__, __LINE__);
     }
 }

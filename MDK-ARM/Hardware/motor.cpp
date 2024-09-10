@@ -6,7 +6,8 @@ void MotorInterface_t::bind_pin()
 }
 void MotorInterface_t::ControlOutput(int16_t control)
 {
-    // 第0个是电调1的高8位，第1个是电调1的低8位，依次类推
+
+    // 第0个是电调1的高8位，第1个是电 调1的低8位，依次类推
     _common_buffer[_id % 4 - 1] = (control >> 8) & 0xFF;
     _common_buffer[_id % 4] = (control) & 0xFF;
     if (HaveTxPermission)
