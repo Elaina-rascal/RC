@@ -20,8 +20,8 @@ int main_cpp()
     motor.bind_pin(1, &hcan1, common_buffer, true);
     while (1)
     {
-        motor.ControlOutput(-400);
-        HAL_Delay(1);
+        motor.ControlOutput(400);
+        HAL_Delay(10);
     }
     return 0;
 }
