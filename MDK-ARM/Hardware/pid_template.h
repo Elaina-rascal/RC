@@ -25,7 +25,10 @@ public:
     pid_base_template_t() {}; // 默认构造函数
     pid_base_template_t(T kp, T ki, T kd);
     pid_base_template_t(T kp, T ki, T kd, T out_min, T out_max);
-    pid_base_template_t(PidBaseConfig_T<T> config) : pid_base_template_t(config.kp, config.ki, config.kd, config.out_min, config.out_max) {};
+    pid_base_template_t(PidBaseConfig_T<T> config) : pid_base_template_t(config.kp, config.ki, config.kd, config.out_min, config.out_max)
+    {
+        error_sum_max = config.integral_max;
+    };
 
     T target_;
     T kp_;          // 比例系数
