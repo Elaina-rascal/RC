@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-11 14:27:26
+ * @LastEditTime: 2024-09-11 14:50:25
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -62,7 +62,7 @@ void Motor_t::set_target(float target)
 void Motor_t::ControlUpdate()
 {
     update();
-    float error = -(_target  - _rev_raw);
-    int16_t control = pid.update(error);
+    // int16_t error = (_target + _rev_raw);
+    int16_t control = pid.update(_rev_raw);
     ControlOutput(control);
 }
