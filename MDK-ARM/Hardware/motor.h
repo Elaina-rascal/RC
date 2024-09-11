@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-11 17:39:21
+ * @LastEditTime: 2024-09-11 17:41:44
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -36,6 +36,8 @@ namespace Motor
             _common_buffer = common_buffer;
             HaveTxPermission = HavePermission;
         }
+
+        /*提供给上层的接口部分*/
         void ControlOutput(int16_t control);
         void update();
         int16_t _rev_raw;   // 转速原始数据

@@ -1,0 +1,19 @@
+# Ignore Keil specific backup and configuration files
+*.uvgui.*      # GUI 配置文件，通常不需要保存
+*.uvoptx.bak   # 备份文件
+*.uvprojx.bak  # 备份文件
+
+# Ignore build and output files
+*.lst
+*.crf
+*.map
+*.o
+*.axf
+*.hex
+*.sct
+*.d  # 依赖文件
+
+# Ignore user-specific temporary files
+*.bak
+*.log
+*.tmp
