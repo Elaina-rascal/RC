@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-11 15:04:53
+ * @LastEditTime: 2024-09-11 17:39:09
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -52,8 +52,18 @@ void MotorInterface_t::ControlOutput(int16_t control)
  */
 void MotorInterface_t::update()
 {
+    switch (_type)
+    {
+    case Motor3508:
+        break;
+    case Motor2006:
+
+        break;
+    default:
+        break;
+    }
 }
-void Motor_t::set_target(float target)
+void Motor_t::set_speed_target(float target)
 {
     _target = target * rev_fator * forward;
     pid.target_update(_target);
@@ -65,4 +75,19 @@ void Motor_t::ControlUpdate()
     // int16_t error = (_target + _rev_raw);
     int16_t control = pid.update(_rev_raw);
     ControlOutput(control);
+}
+void Motor2006_t::set_angle_target(float target)
+{
+    angle_target = target * angle_fator;
+    angle_pid.target_update(angle_target);
+}
+void Motor2006_t::AngleControlUpdate()
+{
+    update();
+    // 算出当前最近的角度
+    int16_t angle_close = (_angle_raw - (int16_t)angle_target) > angle_raw_max / 2 ? _angle_raw - angle_raw_max : _angle_raw;
+    int16_t control = angle_pid.update(angle_close);
+    Motor_t::set_speed_target(control);
+
+    Motor_t::ControlUpdate();
 }

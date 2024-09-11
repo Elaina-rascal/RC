@@ -115,8 +115,8 @@ void pid_base_template_t<T, T2>::reset(void)
 {
     last_output_ = 0.0f; // 上一次的控制输出值
     target_ = 0.0f;      // 控制目标值
-    out_min_ = 0.0f;     // 控制输出最小值
-    out_max_ = 0.0f;     // 控制输出最大值
+    // out_min_ = 0.0f;     // 控制输出最小值
+    // out_max_ = 0.0f;     // 控制输出最大值
 
     kp_ = 0.0;
     ki_ = 0.0;

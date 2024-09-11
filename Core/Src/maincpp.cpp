@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:26:13
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-11 15:44:44
+ * @LastEditTime: 2024-09-11 17:10:30
  * @FilePath: \MDK-ARMg:\project\stm32\f427iih6\RC\Core\Src\maincpp.cpp
  * @Description:
  *
@@ -14,7 +14,8 @@
 #include "string.h"
 uint8_t common_buffer[8] = {0};
 // Motor::MotorInterface_t motor;
-Motor::Motor_t motor;
+// Motor::Angle_Motor_t motor;
+Motor::Motor2006_t motor = Motor::Motor2006_t();
 void can_filter_init(CAN_HandleTypeDef *_hcan);
 void Configure_Filter(void);
 void Serial_Printf(char *format, ...);
@@ -25,10 +26,13 @@ int main_cpp()
     while (1)
     {
         // motor.ControlOutput(400);
-				
-        Serial_Printf("%d\n",motor._rev_raw);
-        motor.set_target(motor.debug);
+
+        Serial_Printf("%d\n", motor._rev_raw);
+        // motor.set_angle_target(motor.debug);
+        // motor.ControlUpdate();
+        motor.set_speed_target(motor.debug);
         motor.ControlUpdate();
+
         HAL_Delay(10);
     }
     return 0;
