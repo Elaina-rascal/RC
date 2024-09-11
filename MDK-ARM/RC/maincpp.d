@@ -33,4 +33,10 @@ rc/maincpp.o: ..\Core\Src\maincpp.cpp ..\Core\Inc\maincpp.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr_ex.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h \
-  Hardware\motor.h Hardware\pid_template.h
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h \
+  Hardware\motor.h Hardware\pid_template.h \
+  D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\libcxx\stdio.h \
+  D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\stdio.h \
+  D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\stdarg.h \
+  D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\libcxx\string.h \
+  D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\string.h

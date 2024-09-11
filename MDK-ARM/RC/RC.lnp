@@ -21,6 +21,7 @@
 "rc\stm32f4xx_hal_exti.o"
 "rc\stm32f4xx_hal_tim.o"
 "rc\stm32f4xx_hal_tim_ex.o"
+"rc\stm32f4xx_hal_uart.o"
 "rc\system_stm32f4xx.o"
 "rc\motor.o"
 --strict --scatter "RC\RC.sct"

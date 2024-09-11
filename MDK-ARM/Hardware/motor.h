@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-11 14:34:23
+ * @LastEditTime: 2024-09-11 15:12:25
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -55,11 +55,11 @@ namespace Motor
     public:
         void set_target(float target);
         void ControlUpdate();
-        float debug; // 给调试用的
-
+        float debug;     // 给调试用的
+        int forward = 1; // 正反转
     protected:
         float _target;
-        pid_base_template_t<int, float> pid = pid_base_template_t<int, float>({5, 2, 0, -1000, 1000, 2000});
+        pid_base_template_t<int, float> pid = pid_base_template_t<int, float>({5, 2, 0, -5000, 5000, 2000});
     };
 }
 #endif

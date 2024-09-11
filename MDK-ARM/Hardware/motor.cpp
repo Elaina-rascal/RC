@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-11 14:50:25
+ * @LastEditTime: 2024-09-11 15:04:53
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -55,7 +55,7 @@ void MotorInterface_t::update()
 }
 void Motor_t::set_target(float target)
 {
-    _target = target * rev_fator;
+    _target = target * rev_fator * forward;
     pid.target_update(_target);
 }
 

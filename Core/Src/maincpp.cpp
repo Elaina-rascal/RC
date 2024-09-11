@@ -2,18 +2,22 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:26:13
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-11 14:11:39
+ * @LastEditTime: 2024-09-11 15:44:44
  * @FilePath: \MDK-ARMg:\project\stm32\f427iih6\RC\Core\Src\maincpp.cpp
  * @Description:
  *
  * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved.
  */
 #include "maincpp.h"
+#include <stdio.h>
+#include <stdarg.h>
+#include "string.h"
 uint8_t common_buffer[8] = {0};
 // Motor::MotorInterface_t motor;
 Motor::Motor_t motor;
 void can_filter_init(CAN_HandleTypeDef *_hcan);
 void Configure_Filter(void);
+void Serial_Printf(char *format, ...);
 int main_cpp()
 {
     Configure_Filter();
@@ -21,6 +25,8 @@ int main_cpp()
     while (1)
     {
         // motor.ControlOutput(400);
+				
+        Serial_Printf("%d\n",motor._rev_raw);
         motor.set_target(motor.debug);
         motor.ControlUpdate();
         HAL_Delay(10);
@@ -92,6 +98,17 @@ void Configure_Filter(void)
         Error_Handler(); //_Error_Handler(__FILE__, __LINE__);
     }
 }
+void Serial_Printf(char *format, ...)
+{
+    char String[100];              // 定义字符数组
+    va_list arg;                   // 定义可变参数列表数据类型的变量arg
+    va_start(arg, format);         // 从format开始，接收参数列表到arg变量
+    vsprintf(String, format, arg); // 使用vsprintf打印格式化字符串和参数列表到字符数组中
+    va_end(arg);                   // 结束变量arg
+    // Serial_SendString(String);     // 串口发送字符数组（字符串）
+    HAL_UART_Transmit(&huart7, (uint8_t *)String, strlen(String), 0xffff);
+}
+
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) // CAN接收中断
 {
     CAN_RxHeaderTypeDef rx_header;
