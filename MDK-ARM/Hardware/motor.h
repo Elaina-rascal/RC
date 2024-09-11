@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-10 20:40:56
+ * @LastEditTime: 2024-09-11 14:34:23
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -59,7 +59,7 @@ namespace Motor
 
     protected:
         float _target;
-        pid_base_template_t<int> pid = pid_base_template_t<int>({30, 2, 0, -1000, 1000, 2000});
+        pid_base_template_t<int, float> pid = pid_base_template_t<int, float>({5, 2, 0, -1000, 1000, 2000});
     };
 }
 #endif

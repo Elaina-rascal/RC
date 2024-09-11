@@ -1,3 +1,13 @@
+/*
+ * @Author: Elaina
+ * @Date: 2024-09-08 14:56:31
+ * @LastEditors: chaffer-cold 1463967532@qq.com
+ * @LastEditTime: 2024-09-11 14:27:26
+ * @FilePath: \MDK-ARM\Hardware\motor.cpp
+ * @Description:
+ *
+ * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved.
+ */
 #include "motor.h"
 using namespace Motor;
 
@@ -52,7 +62,7 @@ void Motor_t::set_target(float target)
 void Motor_t::ControlUpdate()
 {
     update();
-    int32_t error = _target * angle_fator - _angle_raw;
+    float error = -(_target  - _rev_raw);
     int16_t control = pid.update(error);
     ControlOutput(control);
 }

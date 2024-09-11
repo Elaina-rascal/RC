@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:26:13
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-10 21:41:38
+ * @LastEditTime: 2024-09-11 14:11:39
  * @FilePath: \MDK-ARMg:\project\stm32\f427iih6\RC\Core\Src\maincpp.cpp
  * @Description:
  *
@@ -10,8 +10,8 @@
  */
 #include "maincpp.h"
 uint8_t common_buffer[8] = {0};
-Motor::MotorInterface_t motor;
-// Motor::Motor_t motor;
+// Motor::MotorInterface_t motor;
+Motor::Motor_t motor;
 void can_filter_init(CAN_HandleTypeDef *_hcan);
 void Configure_Filter(void);
 int main_cpp()
@@ -20,7 +20,9 @@ int main_cpp()
     motor.bind_pin(1, &hcan1, common_buffer, true);
     while (1)
     {
-        motor.ControlOutput(400);
+        // motor.ControlOutput(400);
+        motor.set_target(motor.debug);
+        motor.ControlUpdate();
         HAL_Delay(10);
     }
     return 0;
