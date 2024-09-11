@@ -24,6 +24,7 @@
 "rc\stm32f4xx_hal_uart.o"
 "rc\system_stm32f4xx.o"
 "rc\motor.o"
+"rc\kinematic.o"
 --strict --scatter "RC\RC.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

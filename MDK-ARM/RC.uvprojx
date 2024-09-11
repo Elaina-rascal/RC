@@ -642,6 +642,11 @@
               <FileType>8</FileType>
               <FilePath>.\Hardware\motor.cpp</FilePath>
             </File>
+            <File>
+              <FileName>kinematic.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\Hardware\kinematic.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
