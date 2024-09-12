@@ -19,6 +19,7 @@
 "rc\stm32f4xx_hal_cortex.o"
 "rc\stm32f4xx_hal.o"
 "rc\stm32f4xx_hal_exti.o"
+"rc\stm32f4xx_hal_spi.o"
 "rc\stm32f4xx_hal_tim.o"
 "rc\stm32f4xx_hal_tim_ex.o"
 "rc\stm32f4xx_hal_uart.o"

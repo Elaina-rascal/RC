@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-12 21:42:25
+ * @LastEditTime: 2024-09-12 21:49:35
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -89,15 +89,19 @@ namespace Motor
             _cs_pin = cs_pin;
             absolute_angle_zero = zero_data;
         }
-        void angle_update(int16_t *relative_angle = nullptr);
+        void angle_update(int16_t relative_angle);
+        void angle_update();
 
     protected:
         int16_t absolute_angle_max = 16383; // 绝对编码器的最大值
         int16_t absolute_angle_raw;         // 绝对编码器的原始值
         int16_t absolute_angle_zero;        // 绝对式编码器原点
 
-        int16_t Turns_num; // 转动的圈数
-        float real_angle;  // 最后的当前真实角度
+        int16_t Turns_num;                 // 转动的圈数
+        int16_t Last_relative_angle;       // 上一次的相对角度
+        int16_t relative_angle_max = 8192; // 相对编码器的最大值
+        float Turns_factor;                // 从圈数转化到角度的系数
+        float real_angle;                  // 最后的当前真实角度
 
     private:
         uint16_t SPI_ReadWriteByte(uint16_t TxData);

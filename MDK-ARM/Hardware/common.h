@@ -13,7 +13,7 @@
 #include "main.h"
 #include "stm32f4xx_hal.h"
 #include "motor.h"
-
+extern SPI_HandleTypeDef hspi4;
 extern UART_HandleTypeDef huart7;
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;

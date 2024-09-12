@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-12 21:28:46
+ * @LastEditTime: 2024-09-12 23:42:03
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -82,31 +82,27 @@ void Motor_t::ControlUpdate()
  * @return {*}
  * @note:
  */
-void Motor2006_Interface_t::angle_update(int16_t *relative_angle)
+void Motor2006_Interface_t::angle_update(int16_t relative_angle)
 {
-    /*不试用相对角度更新*/
-    if (relative_angle != nullptr)
-    {
-        uint16_t data;
-        SPI_ReadWriteByte(0xFFFF);
-        data = SPI_ReadWriteByte(0xFFFF);
-        data &= 0x3FFF;
-        //     if(data>=absolute_angle_zero)
-        //     {
-        //         absolute_angle_raw=data-absolute_angle_zero;
-        //     }
-        //     else
-        //     {
-        //         absolute_angle_raw=
-        //     }
-        (data >= absolute_angle_zero) ? absolute_angle_raw = data - absolute_angle_zero : absolute_angle_raw = data - absolute_angle_zero + absolute_angle_max;
-    }
-    /*使用相对角度更新*/
-    else
-    {
-    }
-}
 
+    //     int16_t relative_angle_data = *((int16_t *)relative_angle);
+}
+void Motor2006_Interface_t::angle_update()
+{
+    uint16_t data;
+    SPI_ReadWriteByte(0xFFFF);
+    data = SPI_ReadWriteByte(0xFFFF);
+    data &= 0x3FFF;
+    //     if(data>=absolute_angle_zero)
+    //     {
+    //         absolute_angle_raw=data-absolute_angle_zero;
+    //     }
+    //     else
+    //     {
+    //         absolute_angle_raw=
+    //     }
+    (data >= absolute_angle_zero) ? absolute_angle_raw = data - absolute_angle_zero : absolute_angle_raw = data - absolute_angle_zero + absolute_angle_max;
+}
 uint16_t Motor2006_Interface_t::SPI_ReadWriteByte(uint16_t TxData)
 {
     uint16_t rx_data;
@@ -116,6 +112,7 @@ uint16_t Motor2006_Interface_t::SPI_ReadWriteByte(uint16_t TxData)
         rx_data = 0;
     }
     HAL_GPIO_WritePin(_cs_port, _cs_pin, GPIO_PIN_SET);
+    return rx_data;
 }
 
 void Motor2006_t::set_angle_target(float target)
