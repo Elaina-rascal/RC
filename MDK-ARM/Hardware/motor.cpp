@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-12 13:31:06
+ * @LastEditTime: 2024-09-12 21:28:46
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -47,7 +47,7 @@ void MotorInterface_t::ControlOutput(int16_t control)
     }
 }
 /**
- * @brief: 电机底层的更新函数，此处用不到为空
+ * @brief: 电机底层的更新函数，此处用不到为空,更新的逻辑在can中断
  * @return {*}
  * @note:
  */
@@ -82,12 +82,29 @@ void Motor_t::ControlUpdate()
  * @return {*}
  * @note:
  */
-void Motor2006_Interface_t::angle_update()
+void Motor2006_Interface_t::angle_update(int16_t *relative_angle)
 {
-    uint16_t data;
-    SPI_ReadWriteByte(0xFFFF);
-    data = SPI_ReadWriteByte(0xFFFF);
-    data &= 0x3FFF;
+    /*不试用相对角度更新*/
+    if (relative_angle != nullptr)
+    {
+        uint16_t data;
+        SPI_ReadWriteByte(0xFFFF);
+        data = SPI_ReadWriteByte(0xFFFF);
+        data &= 0x3FFF;
+        //     if(data>=absolute_angle_zero)
+        //     {
+        //         absolute_angle_raw=data-absolute_angle_zero;
+        //     }
+        //     else
+        //     {
+        //         absolute_angle_raw=
+        //     }
+        (data >= absolute_angle_zero) ? absolute_angle_raw = data - absolute_angle_zero : absolute_angle_raw = data - absolute_angle_zero + absolute_angle_max;
+    }
+    /*使用相对角度更新*/
+    else
+    {
+    }
 }
 
 uint16_t Motor2006_Interface_t::SPI_ReadWriteByte(uint16_t TxData)
