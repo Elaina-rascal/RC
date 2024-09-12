@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-11 17:39:09
+ * @LastEditTime: 2024-09-12 13:31:06
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -18,6 +18,7 @@ void MotorInterface_t::ControlOutput(int16_t control)
     // 第0个是电调1的高8位，第1个是电 调1的低8位，依次类推
     _common_buffer[_id % 4 - 1] = (control >> 8) & 0xFF;
     _common_buffer[_id % 4] = (control) & 0xFF;
+    // 如果有发送can的权限，执行发送逻辑
     if (HaveTxPermission)
     {
         uint32_t TxMailbox;
@@ -76,6 +77,30 @@ void Motor_t::ControlUpdate()
     int16_t control = pid.update(_rev_raw);
     ControlOutput(control);
 }
+/**
+ * @brief 用SPI来获得电机的角度数据
+ * @return {*}
+ * @note:
+ */
+void Motor2006_Interface_t::angle_update()
+{
+    uint16_t data;
+    SPI_ReadWriteByte(0xFFFF);
+    data = SPI_ReadWriteByte(0xFFFF);
+    data &= 0x3FFF;
+}
+
+uint16_t Motor2006_Interface_t::SPI_ReadWriteByte(uint16_t TxData)
+{
+    uint16_t rx_data;
+    HAL_GPIO_WritePin(_cs_port, _cs_pin, GPIO_PIN_RESET);
+    if (HAL_SPI_TransmitReceive(_spi, (uint8_t *)&TxData, (uint8_t *)&rx_data, 1, 1000) != HAL_OK)
+    {
+        rx_data = 0;
+    }
+    HAL_GPIO_WritePin(_cs_port, _cs_pin, GPIO_PIN_SET);
+}
+
 void Motor2006_t::set_angle_target(float target)
 {
     angle_target = target * angle_fator;

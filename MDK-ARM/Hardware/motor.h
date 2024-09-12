@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-11 17:41:44
+ * @LastEditTime: 2024-09-12 13:33:43
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -70,22 +70,55 @@ namespace Motor
         int forward = 1; // 正反转
     protected:
         float _target;
-        pid_base_template_t<int, float> pid = pid_base_template_t<int, float>({5, 2, 0, -5000, 5000, 2000});
+        pid_base_template_t<int16_t, float> pid = pid_base_template_t<int16_t, float>({5, 2, 0, -5000, 5000, 2000});
     };
-    class Motor2006_t : public Motor_t
+
+    /*与2006绝对式编码器相关部分*/
+    // 2006的基础派生类
+    /*与绝对编码相关的部分*/
+    class Motor2006_Interface_t
     {
     public:
+        Motor2006_Interface_t()
+        {
+        }
+        Motor2006_Interface_t(SPI_HandleTypeDef *spi, GPIO_TypeDef *cs_port, uint16_t cs_pin)
+        {
+            _spi = spi;
+            _cs_port = cs_port;
+            _cs_pin = cs_pin;
+        }
+        void angle_update();
+
+    protected:
+        int16_t absolute_angle_max;
+        int16_t absolute_angle;
+
+    private:
+        uint16_t SPI_ReadWriteByte(uint16_t TxData);
+        SPI_HandleTypeDef *_spi;
+        GPIO_TypeDef *_cs_port;
+        uint16_t _cs_pin;
+    };
+    class Motor2006_t : public Motor_t, public Motor2006_Interface_t
+    {
+    public:
+        Motor2006_t(SPI_HandleTypeDef *spi, GPIO_TypeDef *cs_port, uint16_t cs_pin) : Motor2006_Interface_t(spi, cs_port, cs_pin)
+        {
+            Motor2006_t();
+        }
         Motor2006_t()
         {
-            pid.pid_update(5, 1.4, 0.5); // 6002 pid参数
             _type = Motor2006;
+            pid.pid_update(5, 1.4, 0.5); // 6002 pid参数
         }
         void set_angle_target(float target);
         void AngleControlUpdate();
 
     private:
+        float zero_angle;
         float angle_target;
-        pid_base_template_t<int, float> angle_pid = pid_base_template_t<int, float>({0.1, 0, 0, -60, 60, 2000});
+        pid_base_template_t<int16_t, float> angle_pid = pid_base_template_t<int16_t, float>({0.1, 0, 0, -60, 60, 2000});
     };
 }
 #endif
