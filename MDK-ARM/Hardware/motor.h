@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 14:32:29
+ * @LastEditTime: 2024-09-13 15:19:56
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -24,6 +24,52 @@ namespace Motor
         Motor3508,
         Motor2006
 
+    };
+    class MotorBase_t
+    {
+    public:
+        MotorBase_t()
+        {
+        }
+        uint8_t _id;
+        float _vel_target;
+        float _angle_target;
+        int16_t _vel_raw;   // 转速原始数据
+        int16_t _angle_raw; // 角度原始数据
+    };
+    class MotorCanBase_t : public MotorBase_t
+    {
+    public:
+        MotorCanBase_t()
+        {
+        }
+        void bind_pin(CAN_HandleTypeDef *hcan, uint8_t id)
+        {
+            _can = hcan;
+            _id = id;
+        }
+
+    protected:
+        void CanSend(uint8_t *data, uint8_t len, uint8_t id);
+
+    private:
+        CAN_HandleTypeDef *_can;
+        // uint8_t id;
+    };
+    class Motor3508_t : public MotorCanBase_t
+    {
+    public:
+        void set_speed_target(float target);
+        void update();
+        float debug;
+        int forward = 1; // 正反转
+    private:
+        uint8_t _common_buffer[8];
+
+        float rev_fator = 33; // 转速系数 从原始数据转化到真实数据的倒数
+        bool have_tx_permission = false;
+
+        pid_base_template_t<int16_t, float> pid = pid_base_template_t<int16_t, float>({5, 2, 0, -5000, 5000, 2000});
     };
 
 #if USE_CAN_Motor
@@ -142,10 +188,12 @@ namespace Motor
     class MotorModule_t
     {
     public:
-        void set_target(float vel_target,float angle_target);
+        void set_target(float vel_target, float angle_target);
+
     protected:
         float _vel_target;
         float _angle_target;
+
     private:
         void CanSend(uint8_t *data, uint8_t len, uint8_t id);
         CAN_HandleTypeDef *_can;

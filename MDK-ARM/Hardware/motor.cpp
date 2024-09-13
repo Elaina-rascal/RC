@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 14:31:33
+ * @LastEditTime: 2024-09-13 15:31:59
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -11,6 +11,42 @@
 #include "motor.h"
 using namespace Motor;
 #if USE_CAN_Motor
+void MotorCanBase_t::CanSend(uint8_t *data, uint8_t len, uint8_t id)
+{
+    CAN_TxHeaderTypeDef Can_Tx;
+    Can_Tx.DLC = len;
+    Can_Tx.ExtId = 0x0000;
+    Can_Tx.StdId = id;
+    Can_Tx.IDE = CAN_ID_STD;
+    Can_Tx.RTR = CAN_RTR_DATA;
+    Can_Tx.TransmitGlobalTime = DISABLE; // 不传输时间戳
+    uint32_t TxMailbox;
+    while (HAL_CAN_GetTxMailboxesFreeLevel(_can) == 0)
+    {
+        /* code */
+    }
+    HAL_CAN_AddTxMessage(_can, &Can_Tx, data, &TxMailbox);
+}
+void Motor3508_t::set_speed_target(float target)
+{
+    _vel_target = target * rev_fator * forward;
+    pid.target_update(_vel_target);
+}
+void Motor3508_t::update()
+{
+    int16_t control = pid.update(_vel_raw);
+    _common_buffer[_id % 4 - 1] = (control >> 8) & 0xFF;
+    _common_buffer[_id % 4] = (control) & 0xFF;
+    if (have_tx_permission)
+    {
+        uint8_t Canid = 0x200;
+        if (_id / 4 == 1)
+        {
+            Canid = 0x1FF;
+        }
+        CanSend(_common_buffer, 8, Canid);
+    }
+}
 void MotorInterface_t::ControlOutput(int16_t control)
 {
     // int16_t remap_control = control / 2; // 映射
