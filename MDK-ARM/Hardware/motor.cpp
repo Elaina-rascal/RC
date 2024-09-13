@@ -35,7 +35,7 @@ void Motor3508_t::set_speed_target(float target)
 }
 void Motor3508_t::update()
 {
-    int16_t control = pid.update(_vel_raw);
+    int16_t control = pid.update(_vel_raw.data_int);
     _common_buffer[_id % 4 - 1] = (control >> 8) & 0xFF;
     _common_buffer[_id % 4] = (control) & 0xFF;
     if (have_tx_permission)
@@ -63,26 +63,11 @@ void MotorModule_t::set_target(float vel_target, float angle_target)
     {
         data[i + 4] = p[i];
     }
-    CanSend(data, 8, id);
+    CanSend(data, 8, _id);
     _vel_target = vel_target;
     _angle_target = angle_target;
 }
-void MotorModule_t::CanSend(uint8_t *data, uint8_t len, uint8_t id)
-{
-    CAN_TxHeaderTypeDef Can_Tx;
-    Can_Tx.DLC = len;
-    Can_Tx.ExtId = 0x0000;
-    Can_Tx.StdId = id;
-    Can_Tx.IDE = CAN_ID_STD;
-    Can_Tx.RTR = CAN_RTR_DATA;
-    Can_Tx.TransmitGlobalTime = DISABLE; // 不传输时间戳
-    uint32_t TxMailbox;
-    while (HAL_CAN_GetTxMailboxesFreeLevel(_can) == 0)
-    {
-        /* code */
-    }
-    HAL_CAN_AddTxMessage(_can, &Can_Tx, data, &TxMailbox);
-}
+
 
 #endif
 #endif

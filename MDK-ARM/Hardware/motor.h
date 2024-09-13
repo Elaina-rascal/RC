@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 15:51:26
+ * @LastEditTime: 2024-09-13 16:35:00
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -19,6 +19,13 @@
 #include "pid_template.h"
 namespace Motor
 {
+    union data_t
+    {
+        uint8_t data_raw[4];
+        float data_float;
+        int32_t data_int;
+    };
+
     enum MotorType_t
     {
         Steering_Motor,
@@ -36,8 +43,10 @@ namespace Motor
         uint8_t _id;
         float _vel_target;
         float _angle_target;
-        int16_t _vel_raw;   // 转速原始数据
-        int16_t _angle_raw; // 角度原始数据
+        // int16_t _vel_raw;   // 转速原始数据
+        // int16_t _angle_raw; // 角度原始数据
+        data_t _vel_raw;
+        data_t _angle_raw;
 #if USE_Debug
         float debug; // 给调试用的
 #endif
@@ -88,19 +97,12 @@ namespace Motor
 #endif
 #if USE_SteeringWheelModel
     /*封装成模块的舵轮分块*/
-    class MotorModule_t
+    class MotorModule_t : public MotorCanBase_t
     {
     public:
         void set_target(float vel_target, float angle_target);
 
-    protected:
-        float _vel_target;
-        float _angle_target;
-
     private:
-        void CanSend(uint8_t *data, uint8_t len, uint8_t id);
-        CAN_HandleTypeDef *_can;
-        uint8_t id;
     };
 }
 #endif

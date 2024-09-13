@@ -113,8 +113,8 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) // CAN接收中�
     switch (rx_header.StdId)
     {
     case 0x201:
-        motor._angle_raw = (rx_data[0] << 8) | rx_data[1];
-        motor._vel_raw = (rx_data[2] << 8) | rx_data[3];
+        motor._angle_raw.data_int = (rx_data[0] << 8) | rx_data[1];
+        motor._vel_raw.data_int = (rx_data[2] << 8) | rx_data[3];
         break;
     default:
     {
