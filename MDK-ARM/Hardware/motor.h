@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-12 21:49:35
+ * @LastEditTime: 2024-09-13 13:55:33
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -10,6 +10,9 @@
  */
 #ifndef __MOTOR_H
 #define __MOTOR_H
+#define USE_CAN_Motor 1          // 使用CAN电机
+#define USE_CAN_AbsoluteMotor 0  // 使用CAN绝对编码电机
+#define USE_SteeringWheelModel 1 // 使用舵轮模块
 #include "common.h"
 #include "pid_template.h"
 namespace Motor
@@ -22,6 +25,8 @@ namespace Motor
         Motor2006
 
     };
+
+#if USE_CAN_Motor
     // 接口类
     class MotorInterface_t
     {
@@ -58,6 +63,7 @@ namespace Motor
         bool HaveTxPermission = false;
     };
 
+    /*直接使用主控控制 */
     class Motor_t : public MotorInterface_t
     {
     public:
@@ -72,10 +78,11 @@ namespace Motor
         float _target;
         pid_base_template_t<int16_t, float> pid = pid_base_template_t<int16_t, float>({5, 2, 0, -5000, 5000, 2000});
     };
-
+#endif
     /*与2006绝对式编码器相关部分*/
     // 2006的基础派生类
-    /*与绝对编码相关的部分*/
+    /*与绝对编码相关的部分没写完*/
+#if USE_CAN_AbsoluteMotor
     class Motor2006_Interface_t
     {
     public:
@@ -129,5 +136,17 @@ namespace Motor
         float angle_target;
         pid_base_template_t<int16_t, float> angle_pid = pid_base_template_t<int16_t, float>({0.1, 0, 0, -60, 60, 2000});
     };
+#endif
+#if USE_SteeringWheelModel
+    /*封装成模块的舵轮分块*/
+    class MotorModuleInterface_t
+    {
+    public:
+    protected:
+    private:
+        CAN_HandleTypeDef *_can;
+        uint8_t id;
+    };
 }
+#endif
 #endif

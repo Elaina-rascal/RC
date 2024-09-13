@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-12 23:42:03
+ * @LastEditTime: 2024-09-13 13:55:01
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -10,7 +10,7 @@
  */
 #include "motor.h"
 using namespace Motor;
-
+#if USE_CAN_Motor
 void MotorInterface_t::ControlOutput(int16_t control)
 {
     // int16_t remap_control = control / 2; // 映射
@@ -77,6 +77,8 @@ void Motor_t::ControlUpdate()
     int16_t control = pid.update(_rev_raw);
     ControlOutput(control);
 }
+#endif
+#if USE_CAN_AbsoluteMotor
 /**
  * @brief 用SPI来获得电机的角度数据
  * @return {*}
@@ -130,3 +132,9 @@ void Motor2006_t::AngleControlUpdate()
 
     Motor_t::ControlUpdate();
 }
+#endif
+#if USE_SteeringWheelModel
+
+
+
+#endif
