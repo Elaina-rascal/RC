@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 15:31:59
+ * @LastEditTime: 2024-09-13 15:42:32
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -11,7 +11,7 @@
 #include "motor.h"
 using namespace Motor;
 #if USE_CAN_Motor
-void MotorCanBase_t::CanSend(uint8_t *data, uint8_t len, uint8_t id)
+void MotorCanBase_t::CanSend(uint8_t *data, uint8_t len, uint32_t id)
 {
     CAN_TxHeaderTypeDef Can_Tx;
     Can_Tx.DLC = len;
@@ -39,7 +39,7 @@ void Motor3508_t::update()
     _common_buffer[_id % 4] = (control) & 0xFF;
     if (have_tx_permission)
     {
-        uint8_t Canid = 0x200;
+        uint32_t Canid = 0x200;
         if (_id / 4 == 1)
         {
             Canid = 0x1FF;

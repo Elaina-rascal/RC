@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 15:19:56
+ * @LastEditTime: 2024-09-13 15:37:32
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -13,6 +13,7 @@
 #define USE_CAN_Motor 1          // 使用CAN电机
 #define USE_CAN_AbsoluteMotor 0  // 使用CAN绝对编码电机
 #define USE_SteeringWheelModel 1 // 使用舵轮模块
+#define USE_Debug 1              // 使用调试
 #include "common.h"
 #include "pid_template.h"
 namespace Motor
@@ -36,6 +37,9 @@ namespace Motor
         float _angle_target;
         int16_t _vel_raw;   // 转速原始数据
         int16_t _angle_raw; // 角度原始数据
+#if USE_Debug
+        float debug; // 给调试用的
+#endif
     };
     class MotorCanBase_t : public MotorBase_t
     {
@@ -50,7 +54,7 @@ namespace Motor
         }
 
     protected:
-        void CanSend(uint8_t *data, uint8_t len, uint8_t id);
+        void CanSend(uint8_t *data, uint8_t len, uint32_t id);
 
     private:
         CAN_HandleTypeDef *_can;
@@ -59,9 +63,14 @@ namespace Motor
     class Motor3508_t : public MotorCanBase_t
     {
     public:
+        Motor3508_t(uint8_t id, bool have_tx_permission = false) : MotorCanBase_t()
+        {
+            _id = id;
+            this->have_tx_permission = have_tx_permission;
+        }
         void set_speed_target(float target);
         void update();
-        float debug;
+        // float debug;
         int forward = 1; // 正反转
     private:
         uint8_t _common_buffer[8];
