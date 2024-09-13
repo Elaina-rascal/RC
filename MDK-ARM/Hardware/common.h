@@ -13,6 +13,8 @@
 #include "main.h"
 #include "stm32f4xx_hal.h"
 #include "motor.h"
+#include "arm_math.h"
+#define PI 3.1415926535
 extern SPI_HandleTypeDef hspi4;
 extern UART_HandleTypeDef huart7;
 extern CAN_HandleTypeDef hcan1;

@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 23:20:27
+ * @LastEditTime: 2024-09-13 23:43:21
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -114,6 +114,7 @@ namespace Motor
         int16_t angle_int;
         int16_t angle_factor = 2608; //45.51/PI*180
         int16_t vel_factor = 2000;
+        float angle_zero=PI/2;
     };
 }
 #endif

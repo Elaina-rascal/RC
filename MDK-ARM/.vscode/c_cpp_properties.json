@@ -9,9 +9,16 @@
                 "g:\\project\\stm32\\f427iih6\\RC\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include",
                 "g:\\project\\stm32\\f427iih6\\RC\\Drivers\\CMSIS\\Include",
                 "g:\\project\\stm32\\f427iih6\\RC\\MDK-ARM\\Hardware",
+                "g:\\project\\stm32\\f427iih6\\RC\\Middlewares\\Third_Party\\FreeRTOS\\Source\\include",
+                "g:\\project\\stm32\\f427iih6\\RC\\Middlewares\\Third_Party\\FreeRTOS\\Source\\CMSIS_RTOS",
+                "g:\\project\\stm32\\f427iih6\\RC\\Middlewares\\Third_Party\\FreeRTOS\\Source\\portable\\RVDS\\ARM_CM4F",
+                "g:\\project\\stm32\\f427iih6\\RC\\Middlewares\\ST\\ARM\\DSP\\Inc",
                 "g:\\project\\stm32\\f427iih6\\RC\\MDK-ARM",
                 "g:\\project\\stm32\\f427iih6\\RC\\Core\\Src",
-                "g:\\project\\stm32\\f427iih6\\RC\\Drivers\\STM32F4xx_HAL_Driver\\Src"
+                "g:\\project\\stm32\\f427iih6\\RC\\Drivers\\STM32F4xx_HAL_Driver\\Src",
+                "g:\\project\\stm32\\f427iih6\\RC\\Middlewares\\Third_Party\\FreeRTOS\\Source",
+                "g:\\project\\stm32\\f427iih6\\RC\\Middlewares\\Third_Party\\FreeRTOS\\Source\\portable\\MemMang",
+                "g:\\project\\stm32\\f427iih6\\RC\\Middlewares\\ST\\ARM\\DSP\\Lib"
             ],
             "defines": [
                 "USE_HAL_DRIVER",
