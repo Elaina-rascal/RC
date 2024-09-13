@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 15:42:32
+ * @LastEditTime: 2024-09-13 20:51:01
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -50,24 +50,17 @@ void Motor3508_t::update()
 }
 #endif
 #if USE_SteeringWheelModel
-void MotorModule_t::set_target(float vel_target, float angle_target)
+void MotorModule_t::set_target(int16_t vel_target, int16_t angle_target)
 {
+    _vel_target_union.data_int = vel_target;
+    _angle_target_union.data_int = angle_target;
     uint8_t data[8];
-    uint8_t *p = (uint8_t *)&vel_target; // 将浮点数的地址转换为 uint8_t* 类型
-    for (int i = 0; i < 4; i++)
-    {
-        data[i] = p[i]; // 逐个字节存储
-    }
-    p = (uint8_t *)&angle_target;
-    for (int i = 0; i < 4; i++)
-    {
-        data[i + 4] = p[i];
-    }
+    data[0] = ((int16_t)_angle_target_union.data_int) >> 8;
+    data[1] = (int16_t)_angle_target_union.data_int;
+    data[2] = ((int16_t)_vel_target_union.data_int) >> 8;
+    data[3] = (int16_t)_vel_target_union.data_int;
     CanSend(data, 8, _id);
-    _vel_target = vel_target;
-    _angle_target = angle_target;
 }
-
 
 #endif
 #endif

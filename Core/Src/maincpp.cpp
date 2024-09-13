@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:26:13
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 15:39:07
+ * @LastEditTime: 2024-09-13 19:45:58
  * @FilePath: \MDK-ARMg:\project\stm32\f427iih6\RC\Core\Src\maincpp.cpp
  * @Description:
  *
@@ -14,23 +14,34 @@
 #include "string.h"
 uint8_t common_buffer[8] = {0};
 Motor::Motor3508_t motor(1, true);
-void can_filter_init(CAN_HandleTypeDef *_hcan);
+Motor::MotorModule_t module;
+void my_can_filter_init_recv_all(CAN_HandleTypeDef *_hcan);
 void Configure_Filter(void);
 void Serial_Printf(char *format, ...);
 int main_cpp()
 {
+    //my_can_filter_init_recv_all(&hcan1);
+    //HAL_CAN_Start(&hcan1);
+    //my_can_filter_init_recv_all(&hcan2);
+    //HAL_CAN_Start(&hcan2);
     Configure_Filter();
+    module.bind_pin(&hcan1, 2);
     motor.bind_pin(&hcan1, 1);
     while (1)
     {
-        motor.set_speed_target(motor.debug);
-        motor.update();
+        // motor.set_speed_target(motor.debug);
+        // motor.update();
+        module.set_target(0,0);
         HAL_Delay(10);
     }
     return 0;
 }
-
-void can_filter_init(CAN_HandleTypeDef *_hcan)
+/**
+ * @description: 接收过滤器（全部接收）
+ * @param {CAN_HandleTypeDef} *_hcan使用的CAN
+ * @return {*}无
+ */
+void my_can_filter_init_recv_all(CAN_HandleTypeDef *_hcan)
 {
     if (_hcan == &hcan2)
     {
