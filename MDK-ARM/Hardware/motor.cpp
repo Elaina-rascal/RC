@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 13:55:01
+ * @LastEditTime: 2024-09-13 14:31:33
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -133,8 +133,39 @@ void Motor2006_t::AngleControlUpdate()
     Motor_t::ControlUpdate();
 }
 #endif
-#if USE_SteeringWheelModel
-
-
+#if USE_SteeringWheelModel && USE_CAN_Motor
+void MotorModule_t::set_target(float vel_target, float angle_target)
+{
+    uint8_t data[8];
+    uint8_t *p = (uint8_t *)&vel_target; // 将浮点数的地址转换为 uint8_t* 类型
+    for (int i = 0; i < 4; i++)
+    {
+        data[i] = p[i]; // 逐个字节存储
+    }
+    p = (uint8_t *)&angle_target;
+    for (int i = 0; i < 4; i++)
+    {
+        data[i + 4] = p[i];
+    }
+    CanSend(data, 8, id);
+    _vel_target = vel_target;
+    _angle_target = angle_target;
+}
+void MotorModule_t::CanSend(uint8_t *data, uint8_t len, uint8_t id)
+{
+    CAN_TxHeaderTypeDef Can_Tx;
+    Can_Tx.DLC = len;
+    Can_Tx.ExtId = 0x0000;
+    Can_Tx.StdId = id;
+    Can_Tx.IDE = CAN_ID_STD;
+    Can_Tx.RTR = CAN_RTR_DATA;
+    Can_Tx.TransmitGlobalTime = DISABLE; // 不传输时间戳
+    uint32_t TxMailbox;
+    while (HAL_CAN_GetTxMailboxesFreeLevel(_can) == 0)
+    {
+        /* code */
+    }
+    HAL_CAN_AddTxMessage(_can, &Can_Tx, data, &TxMailbox);
+}
 
 #endif

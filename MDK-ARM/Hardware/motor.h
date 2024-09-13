@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 13:55:33
+ * @LastEditTime: 2024-09-13 14:32:29
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -137,13 +137,17 @@ namespace Motor
         pid_base_template_t<int16_t, float> angle_pid = pid_base_template_t<int16_t, float>({0.1, 0, 0, -60, 60, 2000});
     };
 #endif
-#if USE_SteeringWheelModel
+#if USE_SteeringWheelModel && USE_CAN_Motor
     /*封装成模块的舵轮分块*/
-    class MotorModuleInterface_t
+    class MotorModule_t
     {
     public:
+        void set_target(float vel_target,float angle_target);
     protected:
+        float _vel_target;
+        float _angle_target;
     private:
+        void CanSend(uint8_t *data, uint8_t len, uint8_t id);
         CAN_HandleTypeDef *_can;
         uint8_t id;
     };
