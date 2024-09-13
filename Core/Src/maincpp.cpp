@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:26:13
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 23:41:01
+ * @LastEditTime: 2024-09-14 00:19:42
  * @FilePath: \MDK-ARMg:\project\stm32\f427iih6\RC\Core\Src\maincpp.cpp
  * @Description:
  *
@@ -13,24 +13,27 @@
 #include <stdarg.h>
 #include "string.h"
 uint8_t common_buffer[8] = {0};
-Motor::Motor3508_t motor(1, true);
-Motor::MotorModule_t module;
+// Motor::Motor3508_t motor(1, true);
+// Motor::MotorModule_t module;
+Motor::MotorModule_t module[4] = {
+    {&hcan1, 0}, {&hcan1, 1}, {&hcan1, 2}, {&hcan1, 3}};
 void my_can_filter_init_recv_all(CAN_HandleTypeDef *_hcan);
 void Configure_Filter(void);
 void Serial_Printf(char *format, ...);
 int main_cpp()
 {
-    //my_can_filter_init_recv_all(&hcan1);
-    //HAL_CAN_Start(&hcan1);
-    //my_can_filter_init_recv_all(&hcan2);
-    //HAL_CAN_Start(&hcan2);
+
     Configure_Filter();
-    module.bind_pin(&hcan1, 2);
-    motor.bind_pin(&hcan1, 1);
+
     while (1)
     {
-        float test=arm_sin_f32(3.1415926/6);
-        module.set_target(0,1.14);
+        for (int i = 0; i < 4; i++)
+        {
+             module[i].set_target(0.25, module[i].debug);
+            //module[i].set_target(0.2, 0);
+        }
+        // module[0].set_target(1, 0);
+        // module.set_target(1, 0);
         HAL_Delay(10);
     }
     return 0;
@@ -123,8 +126,8 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) // CAN接收中�
     switch (rx_header.StdId)
     {
     case 0x201:
-        motor._angle_raw.data_int = (rx_data[0] << 8) | rx_data[1];
-        motor._vel_raw.data_int = (rx_data[2] << 8) | rx_data[3];
+        // motor._angle_raw.data_int = (rx_data[0] << 8) | rx_data[1];
+        // motor._vel_raw.data_int = (rx_data[2] << 8) | rx_data[3];
         break;
     default:
     {

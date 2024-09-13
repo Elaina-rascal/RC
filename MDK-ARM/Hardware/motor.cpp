@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 23:20:41
+ * @LastEditTime: 2024-09-13 23:55:44
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -64,9 +64,10 @@ void Motor3508_t::update()
 void MotorModule_t::set_target(float vel_target, float angle_target)
 {
     _vel_target = vel_target;
-    _angle_target = angle_target;
-    vel_int = vel_target * vel_factor*forward;
-    angle_int = angle_target * angle_factor;
+    _angle_target = angle_target - angle_zero;
+
+    vel_int = _vel_target * vel_factor * forward;
+    angle_int = _angle_target * angle_factor;
     uint8_t data[8];
     data[0] = ((int16_t)angle_int) >> 8;
     data[1] = (int16_t)angle_int;

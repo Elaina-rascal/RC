@@ -13,6 +13,7 @@
 #include "common.h"
 namespace Kinematic
 {
+
     struct cmd_vel_t
     {
         float linear_x;
@@ -22,6 +23,10 @@ namespace Kinematic
     enum Kinematic_mode_t
     {
         OpenControl,
+    };
+    enum Kinematic_type_t
+    {
+        four_wheel_steering
     };
     class Kinematic_t
     {
@@ -41,6 +46,7 @@ namespace Kinematic
 
     private:
         Kinematic_mode_t mode = OpenControl;
+        Kinematic_type_t type = four_wheel_steering;
         float L; // 前后轮之间的距离
         float W; // 左右轮之间的距离
     };

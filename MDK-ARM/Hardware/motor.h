@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 23:43:21
+ * @LastEditTime: 2024-09-14 00:09:57
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -41,6 +41,9 @@ namespace Motor
         MotorBase_t()
         {
         }
+        MotorBase_t(uint8_t id) : _id(id)
+        {
+        }
         uint8_t _id;
         float _vel_target;
         float _angle_target;
@@ -62,6 +65,9 @@ namespace Motor
     {
     public:
         MotorCanBase_t()
+        {
+        }
+        MotorCanBase_t(CAN_HandleTypeDef *hcan, uint8_t id) : MotorBase_t(id), _can(hcan)
         {
         }
         void bind_pin(CAN_HandleTypeDef *hcan, uint8_t id)
@@ -105,16 +111,24 @@ namespace Motor
     class MotorModule_t : public MotorCanBase_t
     {
     public:
+        MotorModule_t()
+        {
+        }
+        MotorModule_t(CAN_HandleTypeDef *hcan, uint8_t id) : MotorCanBase_t(hcan, id)
+        {
+            // _type = Steering_Motor;
+        }
+
         // void set_target(int16_t vel_target, int16_t angle_target);
         void set_target(float vel_target, float angle_target);
 
     private:
-        int8_t forward=1;
+        int8_t forward = 1;
         int16_t vel_int;
         int16_t angle_int;
-        int16_t angle_factor = 2608; //45.51/PI*180
+        int16_t angle_factor = 2608; // 45.51/PI*180
         int16_t vel_factor = 2000;
-        float angle_zero=PI/2;
+        float angle_zero = PI / 2;
     };
 }
 #endif
