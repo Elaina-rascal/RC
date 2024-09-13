@@ -27,6 +27,7 @@ void MotorCanBase_t::CanSend(uint8_t *data, uint8_t len, uint32_t id)
     }
     HAL_CAN_AddTxMessage(_can, &Can_Tx, data, &TxMailbox);
 }
+#if USE_3508
 void Motor3508_t::set_speed_target(float target)
 {
     _vel_target = target * rev_fator * forward;
@@ -47,72 +48,43 @@ void Motor3508_t::update()
         CanSend(_common_buffer, 8, Canid);
     }
 }
-void MotorInterface_t::ControlOutput(int16_t control)
+#endif
+#if USE_SteeringWheelModel
+void MotorModule_t::set_target(float vel_target, float angle_target)
 {
-    // int16_t remap_control = control / 2; // 映射
-
-    // 第0个是电调1的高8位，第1个是电 调1的低8位，依次类推
-    _common_buffer[_id % 4 - 1] = (control >> 8) & 0xFF;
-    _common_buffer[_id % 4] = (control) & 0xFF;
-    // 如果有发送can的权限，执行发送逻辑
-    if (HaveTxPermission)
+    uint8_t data[8];
+    uint8_t *p = (uint8_t *)&vel_target; // 将浮点数的地址转换为 uint8_t* 类型
+    for (int i = 0; i < 4; i++)
     {
-        uint32_t TxMailbox;
-        CAN_TxHeaderTypeDef Can_Tx;
-        Can_Tx.DLC = 0x08;
-        Can_Tx.ExtId = 0x0000;
-
-        // 大疆的电机协议，1-4用0x200,5-8用0x1FF
-        if (_id / 4 == 0)
-        {
-            Can_Tx.StdId = 0x200;
-        }
-        // Can_Tx.StdId = id;
-        else
-        {
-            Can_Tx.StdId = 0x1FF;
-        }
-        Can_Tx.IDE = CAN_ID_STD;
-        Can_Tx.RTR = CAN_RTR_DATA;
-        Can_Tx.TransmitGlobalTime = DISABLE; // 不传输时间戳
-        while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0)
-        {
-            /* code */
-        }
-        HAL_CAN_AddTxMessage(_hcan, &Can_Tx, _common_buffer, &TxMailbox);
+        data[i] = p[i]; // 逐个字节存储
     }
-}
-/**
- * @brief: 电机底层的更新函数，此处用不到为空,更新的逻辑在can中断
- * @return {*}
- * @note:
- */
-void MotorInterface_t::update()
-{
-    switch (_type)
+    p = (uint8_t *)&angle_target;
+    for (int i = 0; i < 4; i++)
     {
-    case Motor3508:
-        break;
-    case Motor2006:
-
-        break;
-    default:
-        break;
+        data[i + 4] = p[i];
     }
+    CanSend(data, 8, id);
+    _vel_target = vel_target;
+    _angle_target = angle_target;
 }
-void Motor_t::set_speed_target(float target)
+void MotorModule_t::CanSend(uint8_t *data, uint8_t len, uint8_t id)
 {
-    _target = target * rev_fator * forward;
-    pid.target_update(_target);
+    CAN_TxHeaderTypeDef Can_Tx;
+    Can_Tx.DLC = len;
+    Can_Tx.ExtId = 0x0000;
+    Can_Tx.StdId = id;
+    Can_Tx.IDE = CAN_ID_STD;
+    Can_Tx.RTR = CAN_RTR_DATA;
+    Can_Tx.TransmitGlobalTime = DISABLE; // 不传输时间戳
+    uint32_t TxMailbox;
+    while (HAL_CAN_GetTxMailboxesFreeLevel(_can) == 0)
+    {
+        /* code */
+    }
+    HAL_CAN_AddTxMessage(_can, &Can_Tx, data, &TxMailbox);
 }
 
-void Motor_t::ControlUpdate()
-{
-    update();
-    // int16_t error = (_target + _rev_raw);
-    int16_t control = pid.update(_rev_raw);
-    ControlOutput(control);
-}
+#endif
 #endif
 #if USE_CAN_AbsoluteMotor
 /**
@@ -168,40 +140,4 @@ void Motor2006_t::AngleControlUpdate()
 
     Motor_t::ControlUpdate();
 }
-#endif
-#if USE_SteeringWheelModel && USE_CAN_Motor
-void MotorModule_t::set_target(float vel_target, float angle_target)
-{
-    uint8_t data[8];
-    uint8_t *p = (uint8_t *)&vel_target; // 将浮点数的地址转换为 uint8_t* 类型
-    for (int i = 0; i < 4; i++)
-    {
-        data[i] = p[i]; // 逐个字节存储
-    }
-    p = (uint8_t *)&angle_target;
-    for (int i = 0; i < 4; i++)
-    {
-        data[i + 4] = p[i];
-    }
-    CanSend(data, 8, id);
-    _vel_target = vel_target;
-    _angle_target = angle_target;
-}
-void MotorModule_t::CanSend(uint8_t *data, uint8_t len, uint8_t id)
-{
-    CAN_TxHeaderTypeDef Can_Tx;
-    Can_Tx.DLC = len;
-    Can_Tx.ExtId = 0x0000;
-    Can_Tx.StdId = id;
-    Can_Tx.IDE = CAN_ID_STD;
-    Can_Tx.RTR = CAN_RTR_DATA;
-    Can_Tx.TransmitGlobalTime = DISABLE; // 不传输时间戳
-    uint32_t TxMailbox;
-    while (HAL_CAN_GetTxMailboxesFreeLevel(_can) == 0)
-    {
-        /* code */
-    }
-    HAL_CAN_AddTxMessage(_can, &Can_Tx, data, &TxMailbox);
-}
-
 #endif
