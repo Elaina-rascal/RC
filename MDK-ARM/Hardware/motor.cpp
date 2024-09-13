@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 20:51:01
+ * @LastEditTime: 2024-09-13 23:20:41
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -50,18 +50,30 @@ void Motor3508_t::update()
 }
 #endif
 #if USE_SteeringWheelModel
-void MotorModule_t::set_target(int16_t vel_target, int16_t angle_target)
+// void MotorModule_t::set_target(int16_t vel_target, int16_t angle_target)
+// {
+//     _vel_target_union.data_int = vel_target;
+//     _angle_target_union.data_int = angle_target;
+//     uint8_t data[8];
+//     data[0] = ((int16_t)_angle_target_union.data_int) >> 8;
+//     data[1] = (int16_t)_angle_target_union.data_int;
+//     data[2] = ((int16_t)_vel_target_union.data_int) >> 8;
+//     data[3] = (int16_t)_vel_target_union.data_int;
+//     CanSend(data, 8, _id);
+// }
+void MotorModule_t::set_target(float vel_target, float angle_target)
 {
-    _vel_target_union.data_int = vel_target;
-    _angle_target_union.data_int = angle_target;
+    _vel_target = vel_target;
+    _angle_target = angle_target;
+    vel_int = vel_target * vel_factor*forward;
+    angle_int = angle_target * angle_factor;
     uint8_t data[8];
-    data[0] = ((int16_t)_angle_target_union.data_int) >> 8;
-    data[1] = (int16_t)_angle_target_union.data_int;
-    data[2] = ((int16_t)_vel_target_union.data_int) >> 8;
-    data[3] = (int16_t)_vel_target_union.data_int;
+    data[0] = ((int16_t)angle_int) >> 8;
+    data[1] = (int16_t)angle_int;
+    data[2] = ((int16_t)vel_int) >> 8;
+    data[3] = (int16_t)vel_int;
     CanSend(data, 8, _id);
 }
-
 #endif
 #endif
 #if USE_CAN_AbsoluteMotor

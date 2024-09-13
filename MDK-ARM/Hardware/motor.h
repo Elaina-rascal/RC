@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 20:50:44
+ * @LastEditTime: 2024-09-13 23:20:27
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -48,8 +48,10 @@ namespace Motor
         // int16_t _angle_raw; // 角度原始数据
         data_t _vel_raw;
         data_t _angle_raw;
-        data_t _vel_target_union;
-        data_t _angle_target_union;
+        // data_t _vel_target_union;
+        // data_t _angle_target_union;
+        float vel_target;
+        float angle_target;
 #if USE_Debug
         float debug; // 给调试用的
 #endif
@@ -103,9 +105,15 @@ namespace Motor
     class MotorModule_t : public MotorCanBase_t
     {
     public:
-        void set_target(int16_t vel_target, int16_t angle_target);
+        // void set_target(int16_t vel_target, int16_t angle_target);
+        void set_target(float vel_target, float angle_target);
 
     private:
+        int8_t forward=1;
+        int16_t vel_int;
+        int16_t angle_int;
+        int16_t angle_factor = 2608; //45.51/PI*180
+        int16_t vel_factor = 2000;
     };
 }
 #endif

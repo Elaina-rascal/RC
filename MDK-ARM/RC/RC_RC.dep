@@ -1,7 +1,7 @@
 Dependencies for Project 'RC', Target 'RC': (DO NOT MODIFY !)
 CompilerVersion: 6190000::V6.19::ARMCLANG
 F (startup_stm32f427xx.s)(0x66E27595)(--target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -masm=auto  -Wa,armasm,--diag_suppress=A1950W -c-gdwarf-4-I./RTE/_RC-ID:/TOOLS/KEIL5/pack/ARM/CMSIS/5.9.0/CMSIS/Core/Include-ID:/TOOLS/KEIL5/pack/Keil/STM32F4xx_DFP/2.17.1/Drivers/CMSIS/Device/ST/STM32F4xx/Include-Wa,armasm,--pd,"__UVISION_VERSION SETA 538" -Wa,armasm,--pd,"_RTE_ SETA 1" -Wa,armasm,--pd,"STM32F427xx SETA 1" -Wa,armasm,--pd,"_RTE_ SETA 1"-o rc/startup_stm32f427xx.o)
-F (..\Core\Src\maincpp.cpp)(0x66E437B0)(-xc++ -std=c++14 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar -fno-exceptions-gdwarf-4 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ./Hardware-I./RTE/_RC-ID:/TOOLS/KEIL5/pack/ARM/CMSIS/5.9.0/CMSIS/Core/Include-ID:/TOOLS/KEIL5/pack/Keil/STM32F4xx_DFP/2.17.1/Drivers/CMSIS/Device/ST/STM32F4xx/Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F427xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F427xx-o rc/maincpp.o -MD)
+F (..\Core\Src\maincpp.cpp)(0x66E45765)(-xc++ -std=c++14 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar -fno-exceptions-gdwarf-4 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ./Hardware-I./RTE/_RC-ID:/TOOLS/KEIL5/pack/ARM/CMSIS/5.9.0/CMSIS/Core/Include-ID:/TOOLS/KEIL5/pack/Keil/STM32F4xx_DFP/2.17.1/Drivers/CMSIS/Device/ST/STM32F4xx/Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F427xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F427xx-o rc/maincpp.o -MD)
 I (..\Core\Inc\maincpp.h)(0x66E1288B)
 I (Hardware\common.h)(0x66E30897)
 I (..\Core\Inc\main.h)(0x66E27594)
@@ -40,7 +40,7 @@ I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_spi.h)(0x66DD42D1)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h)(0x66DD42D1)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h)(0x66DD42D1)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h)(0x66DD42D1)
-I (Hardware\motor.h)(0x66E43524)
+I (Hardware\motor.h)(0x66E4583B)
 I (Hardware\pid_template.h)(0x66E27F4C)
 I (D:\TOOLS\KEIL5\ARM\ARMCLANG\include\libcxx\stdio.h)(0x63884908)
 I (D:\TOOLS\KEIL5\ARM\ARMCLANG\include\stdio.h)(0x63884908)
@@ -813,8 +813,8 @@ I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h)(0x66DD42D1)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h)(0x66DD42D1)
 F (.\Hardware\common.h)(0x66E30897)()
 F (.\Hardware\pid_template.h)(0x66E27F4C)()
-F (.\Hardware\motor.cpp)(0x66E437A0)(-xc++ -std=c++14 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar -fno-exceptions-gdwarf-4 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ./Hardware-I./RTE/_RC-ID:/TOOLS/KEIL5/pack/ARM/CMSIS/5.9.0/CMSIS/Core/Include-ID:/TOOLS/KEIL5/pack/Keil/STM32F4xx_DFP/2.17.1/Drivers/CMSIS/Device/ST/STM32F4xx/Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F427xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F427xx-o rc/motor.o -MD)
-I (Hardware\motor.h)(0x66E43524)
+F (.\Hardware\motor.cpp)(0x66E45849)(-xc++ -std=c++14 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar -fno-exceptions-gdwarf-4 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ./Hardware-I./RTE/_RC-ID:/TOOLS/KEIL5/pack/ARM/CMSIS/5.9.0/CMSIS/Core/Include-ID:/TOOLS/KEIL5/pack/Keil/STM32F4xx_DFP/2.17.1/Drivers/CMSIS/Device/ST/STM32F4xx/Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F427xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F427xx-o rc/motor.o -MD)
+I (Hardware\motor.h)(0x66E4583B)
 I (Hardware\common.h)(0x66E30897)
 I (..\Core\Inc\main.h)(0x66E27594)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h)(0x66DD42D1)
@@ -892,5 +892,5 @@ I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_spi.h)(0x66DD42D1)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h)(0x66DD42D1)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h)(0x66DD42D1)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h)(0x66DD42D1)
-I (Hardware\motor.h)(0x66E43524)
+I (Hardware\motor.h)(0x66E4583B)
 I (Hardware\pid_template.h)(0x66E27F4C)

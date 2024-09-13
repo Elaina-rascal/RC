@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:26:13
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 19:45:58
+ * @LastEditTime: 2024-09-13 23:21:24
  * @FilePath: \MDK-ARMg:\project\stm32\f427iih6\RC\Core\Src\maincpp.cpp
  * @Description:
  *
@@ -29,9 +29,7 @@ int main_cpp()
     motor.bind_pin(&hcan1, 1);
     while (1)
     {
-        // motor.set_speed_target(motor.debug);
-        // motor.update();
-        module.set_target(0,0);
+        module.set_target(0,1.14);
         HAL_Delay(10);
     }
     return 0;
