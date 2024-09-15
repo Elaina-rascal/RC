@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-12 23:42:03
+ * @LastEditTime: 2024-09-14 23:12:16
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -10,73 +10,105 @@
  */
 #include "motor.h"
 using namespace Motor;
-
-void MotorInterface_t::ControlOutput(int16_t control)
+#if USE_CAN_Motor
+void MotorCanBase_t::CanSend(uint8_t *data, uint8_t len, uint32_t id)
 {
-    // int16_t remap_control = control / 2; // 映射
-
-    // 第0个是电调1的高8位，第1个是电 调1的低8位，依次类推
+    CAN_TxHeaderTypeDef Can_Tx;
+    Can_Tx.DLC = len;
+    Can_Tx.ExtId = 0x0000;
+    Can_Tx.StdId = id;
+    Can_Tx.IDE = CAN_ID_STD;
+    Can_Tx.RTR = CAN_RTR_DATA;
+    Can_Tx.TransmitGlobalTime = DISABLE; // 不传输时间戳
+    uint32_t TxMailbox;
+    while (HAL_CAN_GetTxMailboxesFreeLevel(_can) == 0)
+    {
+        /* code */
+    }
+    HAL_CAN_AddTxMessage(_can, &Can_Tx, data, &TxMailbox);
+}
+#if USE_3508
+void Motor3508_t::set_speed_target(float target)
+{
+    _vel_target = target * rev_fator * forward;
+    pid.target_update(_vel_target);
+}
+void Motor3508_t::update()
+{
+    int16_t control = pid.update(_vel_raw.data_int);
     _common_buffer[_id % 4 - 1] = (control >> 8) & 0xFF;
     _common_buffer[_id % 4] = (control) & 0xFF;
-    // 如果有发送can的权限，执行发送逻辑
-    if (HaveTxPermission)
+    if (have_tx_permission)
     {
-        uint32_t TxMailbox;
-        CAN_TxHeaderTypeDef Can_Tx;
-        Can_Tx.DLC = 0x08;
-        Can_Tx.ExtId = 0x0000;
-
-        // 大疆的电机协议，1-4用0x200,5-8用0x1FF
-        if (_id / 4 == 0)
+        uint32_t Canid = 0x200;
+        if (_id / 4 == 1)
         {
-            Can_Tx.StdId = 0x200;
+            Canid = 0x1FF;
         }
-        // Can_Tx.StdId = id;
+        CanSend(_common_buffer, 8, Canid);
+    }
+}
+#endif
+#if USE_SteeringWheelModel
+// void MotorModule_t::set_target(int16_t vel_target, int16_t angle_target)
+// {
+//     _vel_target_union.data_int = vel_target;
+//     _angle_target_union.data_int = angle_target;
+//     uint8_t data[8];
+//     data[0] = ((int16_t)_angle_target_union.data_int) >> 8;
+//     data[1] = (int16_t)_angle_target_union.data_int;
+//     data[2] = ((int16_t)_vel_target_union.data_int) >> 8;
+//     data[3] = (int16_t)_vel_target_union.data_int;
+//     CanSend(data, 8, _id);
+// }
+float MotorModule_t::normalize_angle(float angle)
+{
+    while (angle > PI)
+    {
+        angle -= 2 * PI;
+    }
+    while (angle < -PI)
+    {
+        angle += 2 * PI;
+    }
+    return angle;
+}
+void MotorModule_t::set_target(float vel_target, float angle_target, bool use_youhua)
+{
+    _vel_target = vel_target;
+    _angle_target = angle_target - angle_zero;
+
+    if (use_youhua)
+    {
+        // 算出轮子不反向角度与轮子反向角度
+        float delta_theta_forward = normalize_angle(_angle_target - angle_last);
+        float delta_theta_reverse = normalize_angle(normalize_angle(_angle_target + PI) - angle_last);
+        if (fabs(delta_theta_forward) > fabs(delta_theta_reverse))
+        {
+            _vel_target = -_vel_target;
+            _angle_target = normalize_angle(_angle_target + PI);
+        }
         else
         {
-            Can_Tx.StdId = 0x1FF;
-        }
-        Can_Tx.IDE = CAN_ID_STD;
-        Can_Tx.RTR = CAN_RTR_DATA;
-        Can_Tx.TransmitGlobalTime = DISABLE; // 不传输时间戳
-        while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0)
-        {
-            /* code */
-        }
-        HAL_CAN_AddTxMessage(_hcan, &Can_Tx, _common_buffer, &TxMailbox);
-    }
-}
-/**
- * @brief: 电机底层的更新函数，此处用不到为空,更新的逻辑在can中断
- * @return {*}
- * @note:
- */
-void MotorInterface_t::update()
-{
-    switch (_type)
-    {
-    case Motor3508:
-        break;
-    case Motor2006:
 
-        break;
-    default:
-        break;
+            _angle_target = normalize_angle(_angle_target);
+        }
     }
-}
-void Motor_t::set_speed_target(float target)
-{
-    _target = target * rev_fator * forward;
-    pid.target_update(_target);
-}
 
-void Motor_t::ControlUpdate()
-{
-    update();
-    // int16_t error = (_target + _rev_raw);
-    int16_t control = pid.update(_rev_raw);
-    ControlOutput(control);
+    vel_int = _vel_target * vel_factor * forward;
+    angle_int = _angle_target * angle_factor;
+
+    uint8_t data[8];
+    data[0] = ((int16_t)angle_int) >> 8;
+    data[1] = (int16_t)angle_int;
+    data[2] = ((int16_t)vel_int) >> 8;
+    data[3] = (int16_t)vel_int;
+    CanSend(data, 8, _id);
+    angle_last = _angle_target;
 }
+#endif
+#endif
+#if USE_CAN_AbsoluteMotor
 /**
  * @brief 用SPI来获得电机的角度数据
  * @return {*}
@@ -130,3 +162,4 @@ void Motor2006_t::AngleControlUpdate()
 
     Motor_t::ControlUpdate();
 }
+#endif

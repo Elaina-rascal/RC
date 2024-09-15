@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:26:13
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-12 23:29:41
+ * @LastEditTime: 2024-09-14 23:07:57
  * @FilePath: \MDK-ARMg:\project\stm32\f427iih6\RC\Core\Src\maincpp.cpp
  * @Description:
  *
@@ -13,34 +13,43 @@
 #include <stdarg.h>
 #include "string.h"
 uint8_t common_buffer[8] = {0};
-// Motor::MotorInterface_t motor;
-// Motor::Angle_Motor_t motor;
-Motor::Motor2006_t motor = Motor::Motor2006_t();
-Motor::Motor2006_Interface_t test(&hspi4, CS1_GPIO_Port, CS1_Pin, 0);
-void can_filter_init(CAN_HandleTypeDef *_hcan);
+Motor::MotorModule_t module[4] = {
+    {&hcan1, 3}, {&hcan1, 2}, {&hcan1, 1}, {&hcan1, 0}};
+Kinematic::Kinematic_t kinematic;
+TaskHandle_t Motor_Handle;
+TaskHandle_t Kinematic_Handle;
+TaskHandle_t Main_Handle;
+
+void my_can_filter_init_recv_all(CAN_HandleTypeDef *_hcan);
 void Configure_Filter(void);
 void Serial_Printf(char *format, ...);
 int main_cpp()
 {
+
     Configure_Filter();
-    motor.bind_pin(1, &hcan1, common_buffer, true);
+
     while (1)
     {
-        // motor.ControlOutput(400);
-
-        Serial_Printf("%d\n", motor._rev_raw);
-        // motor.set_angle_target(motor.debug);
-        // motor.ControlUpdate();
-        test.angle_update();
-        motor.set_speed_target(motor.debug);
-        motor.ControlUpdate();
-
+        // for (int i = 0; i < 4; i++)
+        // {
+        // module[i].set_target(0, module[i].debug);
+        // module[i].set_target(0.2, 0);
+        // }
+        kinematic.set_target(kinematic.target_val);
+        for (int i = 0; i < 4; i++)
+        {
+            module[i].set_target(kinematic.Motor_speed_target[i], kinematic.Motor_angle_target[i],true);
+        }
         HAL_Delay(10);
     }
     return 0;
 }
-
-void can_filter_init(CAN_HandleTypeDef *_hcan)
+/**
+ * @description: 接收过滤器（全部接收）
+ * @param {CAN_HandleTypeDef} *_hcan使用的CAN
+ * @return {*}无
+ */
+void my_can_filter_init_recv_all(CAN_HandleTypeDef *_hcan)
 {
     if (_hcan == &hcan2)
     {
@@ -123,8 +132,8 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) // CAN接收中�
     switch (rx_header.StdId)
     {
     case 0x201:
-        motor._angle_raw = (rx_data[0] << 8) | rx_data[1];
-        motor._rev_raw = (rx_data[2] << 8) | rx_data[3];
+        // motor._angle_raw.data_int = (rx_data[0] << 8) | rx_data[1];
+        // motor._vel_raw.data_int = (rx_data[2] << 8) | rx_data[3];
         break;
     default:
     {
