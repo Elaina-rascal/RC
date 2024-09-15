@@ -185,6 +185,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>module</ItemText>
         </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>kinematic</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow1>
         <Mm>

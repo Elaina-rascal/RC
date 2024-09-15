@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-14 00:09:57
+ * @LastEditTime: 2024-09-14 22:59:41
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -120,9 +120,10 @@ namespace Motor
         }
 
         // void set_target(int16_t vel_target, int16_t angle_target);
-        void set_target(float vel_target, float angle_target);
-
+        void set_target(float vel_target, float angle_target, bool use_youhua = false);
+        float normalize_angle(float angle);
     private:
+        float angle_last;
         int8_t forward = 1;
         int16_t vel_int;
         int16_t angle_int;

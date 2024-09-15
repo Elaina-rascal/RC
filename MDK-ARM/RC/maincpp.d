@@ -181,6 +181,21 @@ rc/maincpp.o: ..\Core\Src\maincpp.cpp ..\Core\Inc\maincpp.h \
   D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\float.h \
   D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\libcxx\limits.h \
   D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\limits.h \
+  ..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.h \
+  ..\Middlewares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h \
+  ..\Core\Inc\FreeRTOSConfig.h \
+  ..\Middlewares\Third_Party\FreeRTOS\Source\include\projdefs.h \
+  ..\Middlewares\Third_Party\FreeRTOS\Source\include\portable.h \
+  ..\Middlewares\Third_Party\FreeRTOS\Source\include\deprecated_definitions.h \
+  ..\Middlewares\Third_Party\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h \
+  ..\Middlewares\Third_Party\FreeRTOS\Source\include\mpu_wrappers.h \
+  ..\Middlewares\Third_Party\FreeRTOS\Source\include\task.h \
+  ..\Middlewares\Third_Party\FreeRTOS\Source\include\list.h \
+  ..\Middlewares\Third_Party\FreeRTOS\Source\include\timers.h \
+  ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
+  ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
+  ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
+  Hardware\kinematic.h \
   D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\libcxx\stdio.h \
   D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\stdio.h \
   D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\stdarg.h

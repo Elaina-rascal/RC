@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:26:13
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-14 00:19:42
+ * @LastEditTime: 2024-09-14 23:07:57
  * @FilePath: \MDK-ARMg:\project\stm32\f427iih6\RC\Core\Src\maincpp.cpp
  * @Description:
  *
@@ -13,10 +13,13 @@
 #include <stdarg.h>
 #include "string.h"
 uint8_t common_buffer[8] = {0};
-// Motor::Motor3508_t motor(1, true);
-// Motor::MotorModule_t module;
 Motor::MotorModule_t module[4] = {
-    {&hcan1, 0}, {&hcan1, 1}, {&hcan1, 2}, {&hcan1, 3}};
+    {&hcan1, 3}, {&hcan1, 2}, {&hcan1, 1}, {&hcan1, 0}};
+Kinematic::Kinematic_t kinematic;
+TaskHandle_t Motor_Handle;
+TaskHandle_t Kinematic_Handle;
+TaskHandle_t Main_Handle;
+
 void my_can_filter_init_recv_all(CAN_HandleTypeDef *_hcan);
 void Configure_Filter(void);
 void Serial_Printf(char *format, ...);
@@ -27,13 +30,16 @@ int main_cpp()
 
     while (1)
     {
+        // for (int i = 0; i < 4; i++)
+        // {
+        // module[i].set_target(0, module[i].debug);
+        // module[i].set_target(0.2, 0);
+        // }
+        kinematic.set_target(kinematic.target_val);
         for (int i = 0; i < 4; i++)
         {
-             module[i].set_target(0.25, module[i].debug);
-            //module[i].set_target(0.2, 0);
+            module[i].set_target(kinematic.Motor_speed_target[i], kinematic.Motor_angle_target[i],true);
         }
-        // module[0].set_target(1, 0);
-        // module.set_target(1, 0);
         HAL_Delay(10);
     }
     return 0;

@@ -15,7 +15,8 @@
 #include "stm32f4xx_hal.h"
 #include "motor.h"
 #include "arm_math.h"
-
+#include "cmsis_os.h"
+#include "kinematic.h"
 extern SPI_HandleTypeDef hspi4;
 extern UART_HandleTypeDef huart7;
 extern CAN_HandleTypeDef hcan1;

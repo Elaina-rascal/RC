@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-13 23:55:44
+ * @LastEditTime: 2024-09-14 23:12:16
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -61,19 +61,50 @@ void Motor3508_t::update()
 //     data[3] = (int16_t)_vel_target_union.data_int;
 //     CanSend(data, 8, _id);
 // }
-void MotorModule_t::set_target(float vel_target, float angle_target)
+float MotorModule_t::normalize_angle(float angle)
+{
+    while (angle > PI)
+    {
+        angle -= 2 * PI;
+    }
+    while (angle < -PI)
+    {
+        angle += 2 * PI;
+    }
+    return angle;
+}
+void MotorModule_t::set_target(float vel_target, float angle_target, bool use_youhua)
 {
     _vel_target = vel_target;
     _angle_target = angle_target - angle_zero;
 
+    if (use_youhua)
+    {
+        // 算出轮子不反向角度与轮子反向角度
+        float delta_theta_forward = normalize_angle(_angle_target - angle_last);
+        float delta_theta_reverse = normalize_angle(normalize_angle(_angle_target + PI) - angle_last);
+        if (fabs(delta_theta_forward) > fabs(delta_theta_reverse))
+        {
+            _vel_target = -_vel_target;
+            _angle_target = normalize_angle(_angle_target + PI);
+        }
+        else
+        {
+
+            _angle_target = normalize_angle(_angle_target);
+        }
+    }
+
     vel_int = _vel_target * vel_factor * forward;
     angle_int = _angle_target * angle_factor;
+
     uint8_t data[8];
     data[0] = ((int16_t)angle_int) >> 8;
     data[1] = (int16_t)angle_int;
     data[2] = ((int16_t)vel_int) >> 8;
     data[3] = (int16_t)vel_int;
     CanSend(data, 8, _id);
+    angle_last = _angle_target;
 }
 #endif
 #endif
