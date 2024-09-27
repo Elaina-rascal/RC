@@ -2,7 +2,7 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-14 22:59:41
+ * @LastEditTime: 2024-09-27 14:35:57
  * @FilePath: \MDK-ARM\Hardware\motor.h
  * @Description:
  *
@@ -35,6 +35,17 @@ namespace Motor
         Motor2006
 
     };
+    /*接口*/
+    class IMotorSpeed_t
+    {
+    public:
+        virtual void set_speed_target(float target) = 0;
+        virtual void update() = 0;
+        virtual void set_angle_target(float target)
+        {
+        }
+    };
+
     class MotorBase_t
     {
     public:
@@ -84,7 +95,7 @@ namespace Motor
         // uint8_t id;
     };
 #if USE_3508
-    class Motor3508_t : public MotorCanBase_t
+    class Motor3508_t : public MotorCanBase_t, public IMotorSpeed_t
     {
     public:
         Motor3508_t(uint8_t id, bool have_tx_permission = false) : MotorCanBase_t()
@@ -92,8 +103,8 @@ namespace Motor
             _id = id;
             this->have_tx_permission = have_tx_permission;
         }
-        void set_speed_target(float target);
-        void update();
+        void set_speed_target(float target) override;
+        void update() override;
         // float debug;
         int forward = 1; // 正反转
     private:
@@ -121,7 +132,8 @@ namespace Motor
 
         // void set_target(int16_t vel_target, int16_t angle_target);
         void set_target(float vel_target, float angle_target, bool use_youhua = false);
-        float normalize_angle(float angle);
+        static float normalize_angle(float angle);
+
     private:
         float angle_last;
         int8_t forward = 1;
