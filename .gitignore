@@ -2,6 +2,7 @@
 *.uvgui.*      # GUI 配置文件，通常不需要保存
 *.uvoptx.bak   # 备份文件
 *.uvprojx.bak  # 备份文件
+.vscode/
 
 # Ignore build and output files
 *.lst

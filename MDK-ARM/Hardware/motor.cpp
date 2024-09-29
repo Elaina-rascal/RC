@@ -2,7 +2,11 @@
  * @Author: Elaina
  * @Date: 2024-09-08 14:56:31
  * @LastEditors: chaffer-cold 1463967532@qq.com
+<<<<<<< HEAD
  * @LastEditTime: 2024-09-14 23:12:16
+=======
+ * @LastEditTime: 2024-09-29 16:42:37
+>>>>>>> 2f19990 (修改了bug添加了ignore)
  * @FilePath: \MDK-ARM\Hardware\motor.cpp
  * @Description:
  *
@@ -36,8 +40,8 @@ void Motor3508_t::set_speed_target(float target)
 void Motor3508_t::update()
 {
     int16_t control = pid.update(_vel_raw.data_int);
-    _common_buffer[_id % 4 - 1] = (control >> 8) & 0xFF;
-    _common_buffer[_id % 4] = (control) & 0xFF;
+    _common_buffer[(_id - 1) % 4 * 2] = (control >> 8) & 0xFF;
+    _common_buffer[(_id - 1) % 4 * 2] = (control) & 0xFF;
     if (have_tx_permission)
     {
         uint32_t Canid = 0x200;
