@@ -21,7 +21,7 @@ void Serial_Printf(char *format, ...);
 int main_cpp()
 {
     Configure_Filter();
-    motor.bind_pin(1, &hcan1, common_buffer, true);
+    motor.bind_pin(8, &hcan1, common_buffer, true);
     while (1)
     {
         // motor.ControlOutput(400);
@@ -116,7 +116,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) // CAN接收中�
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
     switch (rx_header.StdId)
     {
-    case 0x201:
+    case 0x208:
         motor._angle_raw = (rx_data[0] << 8) | rx_data[1];
         motor._rev_raw = (rx_data[2] << 8) | rx_data[3];
         break;

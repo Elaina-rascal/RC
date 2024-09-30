@@ -16,8 +16,8 @@ void MotorInterface_t::ControlOutput(int16_t control)
     // int16_t remap_control = control / 2; // 映射
 
     // 第0个是电调1的高8位，第1个是电 调1的低8位，依次类推
-    _common_buffer[_id % 4 - 1] = (control >> 8) & 0xFF;
-    _common_buffer[_id % 4] = (control) & 0xFF;
+    _common_buffer[(_id-1)%4*2] = (control >> 8) & 0xFF;
+    _common_buffer[(_id-1 )%4*2+1] = (control) & 0xFF;
     if (HaveTxPermission)
     {
         uint32_t TxMailbox;
