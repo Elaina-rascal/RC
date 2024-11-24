@@ -35,14 +35,23 @@ void MotorCanBase_t::CanSend(uint8_t *data, uint8_t len, uint32_t id)
 }
 #if USE_3508
 /**
- * @brief 设置目标速度
+ * @brief 设置目标轴速度
  * 
- * @param target 目标速度,为线速度
+ * @param target 目标速度,为轴速度
  */
 void Motor3508_t::set_speed_target(float target)
 {
     _vel_target = target * rev_fator * forward;
     pid.target_update(_vel_target);
+}
+/**
+ * @brief 设置目标线速度,需要定义实例Radium
+ * 
+ * @param linear_speed 
+ */
+void Motor3508_t::setLinearSpeed(float linear_speed)
+{
+    set_speed_target(linear_speed*_radium);
 }
 /**
  * @brief 电机更新,需要在循环中调用,并在其他地方更新_vel_raw

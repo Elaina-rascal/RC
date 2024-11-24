@@ -125,6 +125,7 @@
             this->have_tx_permission = have_tx_permission;
         }
         void set_speed_target(float target) override;
+        void setLinearSpeed(float linear_speed);
         void update() override;
         // float debug;
         int forward = 1; // 正反转
