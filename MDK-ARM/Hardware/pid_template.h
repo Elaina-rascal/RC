@@ -2,9 +2,11 @@
  * @file pid_template.h
  * @author Elaina (1463967532@qq.com)
  * @brief pid的参数模版库
- * 使用方法1.定义: pid_base_template_t<int16t,float>pid({0.1,0,0,-60,60,2000});
- * 或者: pid_base_template_t<int16t,float>pid;PidBaseConfig_T<int16t,float>config={0.1,0,0,-60,60,2000};pid(config);
+ * 使用方法:
+ * 定义1: pid_base_template_t<int16t,float>pid({0.1,0,0,-60,60,2000});
+ * 定义2.: pid_base_template_t<int16t,float>pid;PidBaseConfig_T<int16t,float>config={0.1,0,0,-60,60,2000};pid(config);
  * 调用方法2.pid.target_update(target)先设置目标值 然后再循环中调用pid.update(contrl)更新控制值
+ * 调用方法3.pid.cal(target,contrl)不需要设置目标值,直接调用
  * @version 0.1
  * @date 2024-11-24
  * 
