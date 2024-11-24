@@ -140,31 +140,19 @@ public:
             error_sum = 0;
         }
     }
-    /**
-     * @brief 设置pid参数，已废弃不要使用
-     * 
-     * @param kp 
-     * @param ki 
-     * @param kd 
-     */
-    void pid_update(T2 kp, T2 ki, T2 kd) 
-    { 
-        reset();
-        kp_ = kp;
-        ki_ = ki;
-        kd_ = kd;
-    }
-    /**
-     * @brief 输出限幅配置,已经弃用
-     * 
-     * @param out_min 
-     * @param out_max 
-     */
-    void out_limit(T out_min, T out_max) 
-    {
-        out_min_ = out_min;
-        out_max_ = out_max;
-    }
+
+protected:
+    T error;              // 误差
+    T error_sum;          // 累计误差
+    T error_sum_max = 25; // 积分上限;
+
+    T error_delta; // 误差微分
+    T error_last;  // 上一次的误差
+
+    T error_pre; // 前次的误差
+
+    T out_min_; // 输出下限
+    T out_max_; // 输出上限
     /**
      * @brief 积分清除
      * 
@@ -191,19 +179,6 @@ public:
         }
         return output;
     }
-
-protected:
-    T error;              // 误差
-    T error_sum;          // 累计误差
-    T error_sum_max = 25; // 积分上限;
-
-    T error_delta; // 误差微分
-    T error_last;  // 上一次的误差
-
-    T error_pre; // 前次的误差
-
-    T out_min_; // 输出下限
-    T out_max_; // 输出上限
 };
 
 /**
@@ -234,15 +209,7 @@ public:
     { 
         return this->output_limit(pid_base_template_t<T, T2>::update(contrl) + forwardfeed()); 
     }
-    /**
-     * @brief 前馈奖励
-     * 
-     * @return T 前馈输出
-     */
-    T forwardfeed() 
-    { 
-        return forwardfeed_k_ * this->target_; 
-    }
+    
     /**
      * @brief 不需要预设target的pid更新
      * 
@@ -259,6 +226,15 @@ public:
 
 private:
     T2 forwardfeed_k_ = 0;
+    /**
+     * @brief 前馈奖励
+     * 
+     * @return T 前馈输出
+     */
+    T forwardfeed() 
+    { 
+        return forwardfeed_k_ * this->target_; 
+    }
 };
 
 /**
