@@ -13,13 +13,18 @@
 #include <stdarg.h>
 #include "string.h"
 uint8_t common_buffer[8] = {0};
+//创建舵轮实例,其实应该用指针,但是这里为了方便直接用实例可能会导致外设初始化失败的问题
 MotorModule_t module[4] = {
     {&hcan1, 3}, {&hcan1, 2}, {&hcan1, 1}, {&hcan1, 0}};
 Kinematic::Kinematic_t kinematic;
 TaskHandle_t Motor_Handle;
 TaskHandle_t Kinematic_Handle;
 TaskHandle_t Main_Handle;
-
+/**
+ * @brief can初始化 
+ * 
+ * @param _hcan 
+ */
 void my_can_filter_init_recv_all(CAN_HandleTypeDef *_hcan);
 void Configure_Filter(void);
 void Serial_Printf(char *format, ...);
@@ -30,11 +35,6 @@ int main_cpp()
 
     while (1)
     {
-        // for (int i = 0; i < 4; i++)
-        // {
-        // module[i].set_target(0, module[i].debug);
-        // module[i].set_target(0.2, 0);
-        // }
         kinematic.set_target(kinematic.target_val);
         for (int i = 0; i < 4; i++)
         {
@@ -123,7 +123,11 @@ void Serial_Printf(char *format, ...)
     // Serial_SendString(String);     // 串口发送字符数组（字符串）
     HAL_UART_Transmit(&huart7, (uint8_t *)String, strlen(String), 0xffff);
 }
-
+/**
+ * @brief can接收中断
+ * 
+ * @param hcan 
+ */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) // CAN接收中断
 {
     CAN_RxHeaderTypeDef rx_header;
