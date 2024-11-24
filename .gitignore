@@ -1,0 +1,22 @@
+# Ignore Keil specific backup and configuration files
+*.uvgui.*      
+*.uvoptx.bak   
+*.uvprojx.bak  
+.vscode/
+
+# Ignore build and output files
+*.lst
+*.crf
+*.map
+*.o
+*.axf
+*.hex
+*.sct
+*.d 
+
+# Ignore user-specific temporary files
+*.bak
+*.log
+*.tmp
+*.dep
+*.htm
