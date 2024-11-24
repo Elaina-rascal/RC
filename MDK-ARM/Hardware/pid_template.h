@@ -30,7 +30,12 @@ struct PidBaseConfig_T
     T integral_max = 25;
 };
 
-// 位置式pid
+/**
+ * @brief 位置式pid
+ * 
+ * @tparam T 目标值和控制值的数据类型
+ * @tparam T2 pid参数的数据类型
+ */
 template <typename T, typename T2>
 class pid_base_template_t
 {
@@ -201,23 +206,51 @@ protected:
     T out_max_; // 输出上限
 };
 
-// 前馈pid
+/**
+ * @brief 前馈pid
+ * 
+ * @tparam T 目标值和控制值的数据类型
+ * @tparam T2 pid参数的数据类型
+ */
 template <typename T, typename T2>
 class pid_foward_template_t : public pid_base_template_t<T, T2>
 {
 public:
+    /**
+     * @brief 通过结构体和参数配置pid
+     * 
+     * @param config pid配置结构体
+     * @param forward_k 前馈系数
+     */
     pid_foward_template_t(PidBaseConfig_T<T, T2> config, T forward_k = 0) : pid_base_template_t<T, T2>(config), forwardfeed_k_(forward_k) {};
-
+    /**
+     * @brief 需要预设target的pid更新
+     * 
+     * @param contrl 当前值
+     * @param clear_integral 是否清除积分,默认不清除 
+     * @return T 控制量
+     */
     T update(T contrl, bool clear_integral = false) 
     { 
         return this->output_limit(pid_base_template_t<T, T2>::update(contrl) + forwardfeed()); 
     }
-
+    /**
+     * @brief 前馈奖励
+     * 
+     * @return T 前馈输出
+     */
     T forwardfeed() 
     { 
         return forwardfeed_k_ * this->target_; 
     }
-
+    /**
+     * @brief 不需要预设target的pid更新
+     * 
+     * @param target 目标值
+     * @param contrl 当前值
+     * @param clear_integral 是否清除积分,默认不清除 
+     * @return T 控制量
+     */
     T cal(T target, T contrl, bool clear_integral = false) 
     { 
         this->target_update(target, clear_integral); 
@@ -228,13 +261,27 @@ private:
     T2 forwardfeed_k_ = 0;
 };
 
-// 增量式pid
+/**
+ * @brief 增量式pid
+ * 
+ * @tparam T 目标值和控制值的数据类型
+ * @tparam T2 pid参数的数据类型
+ */
 template <typename T, typename T2>
 class pid_Increment_template_t : public pid_base_template_t<T, T2>
 {
 public:
+    /**
+     * @brief Construct a new pid_Increment_template_t object
+     * 
+     * @param config 
+     */
     pid_Increment_template_t(PidBaseConfig_T<T, T2> config) : pid_base_template_t<T, T2>(config) {};
-
+    /**
+     * @brief 需要设置target的pid更新
+     * @param contrl 当前值
+     * @return T 控制量
+     */
     T update(T contrl) 
     { 
         this->error = this->target_ - contrl; 
@@ -253,7 +300,14 @@ public:
         }
         return output;
     }
-
+    /**
+     * @brief 不用设置target的pid更新
+     * 
+     * @param target 目标值
+     * @param contrl 当前值
+     * @param clear_integral 是否清除积分,默认不清除 
+     * @return T 控制量
+     */
     T cal(T target, T contrl, bool clear_integral = false) 
     { 
         this->target_update(target, clear_integral); 
