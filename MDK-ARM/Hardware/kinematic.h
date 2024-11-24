@@ -1,12 +1,12 @@
-/*
- * @Author: Elaina
- * @Date: 2024-09-11 17:49:32
- * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-15 00:35:53
- * @FilePath: \MDK-ARM\Hardware\kinematic.h
- * @Description:
- *
- * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved.
+/**
+ * @file kinematic.h
+ * @author Elaina (1463967532@qq.com)
+ * @brief 舵轮结算头文件
+ * @version 0.1
+ * @date 2024-11-24
+ * 
+ * @copyright Copyright (c) 2024
+ * 
  */
 #ifndef __KINEMATIC_H
 #define __KINEMATIC_H
@@ -31,14 +31,7 @@ namespace Kinematic
     {
         OpenControl,
     };
-    enum Kinematic_type_t
-    {
-        four_wheel_steering
-    };
-    enum Motor_sector_t
-    {
-        
-    };
+
     class Kinematic_t
     {
     public:
@@ -59,7 +52,7 @@ namespace Kinematic
 
     private:
         Kinematic_mode_t mode = OpenControl;
-        Kinematic_type_t type = four_wheel_steering;
+
         float L = 0.425; // 前后轮之间的距离
         float W = 0.425; // 左右轮之间的距离
     };

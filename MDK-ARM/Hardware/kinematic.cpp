@@ -1,19 +1,23 @@
-/*
- * @Author: Elaina
- * @Date: 2024-09-11 17:49:32
- * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-15 00:43:02
- * @FilePath: \MDK-ARM\Hardware\kinematic.cpp
- * @Description:
- *
- * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved.
+/**
+ * @file kinematic.cpp
+ * @author Elaina (1463967532@qq.com)
+ * @brief 舵轮解算软件库 
+ * @version 0.1
+ * @date 2024-11-24
+ * 
+ * @copyright Copyright (c) 2024
+ * 
  */
 #include "kinematic.h"
 #define MY_SIN_CNT(x) arm_sin_f32(x)
 #define MY_COS_CNT(x) arm_cos_f32(x)
 #define MY_SQRT_CNT(x) arm_sqrt_f32(x)
 using namespace Kinematic;
-
+/**
+ * @brief 设置目标值
+ * 
+ * @param cmd_vel_in   目标速度,局部坐标系 
+ */
 void Kinematic_t::set_target(cmd_vel_t cmd_vel_in)
 {
     target_val = cmd_vel_in;
@@ -21,10 +25,11 @@ void Kinematic_t::set_target(cmd_vel_t cmd_vel_in)
 }
 /**
  * @brief 根据自身坐标系从底盘速度解算电机速度
- * @return {*}
- * @note:
+ * 
+ * @param cmd_vel_in 目标速度
+ * @param Motor_speed 解算出的速度,传入float4
+ * @param Motor_angle 解算出的角度,传入float4
  */
-
 void Kinematic_t::inv(cmd_vel_t *cmd_vel_in, float *Motor_speed, float *Motor_angle)
 {
     float linear_x = cmd_vel_in->linear_x;
@@ -66,7 +71,12 @@ void Kinematic_t::update()
 void Kinematic_t::forward(cmd_vel_t *cmd_vel_in, float *Motor_speed, float *Motor_angle)
 {
 }
-
+/**
+ * @brief 角度归一化到-PI到PI
+ * 
+ * @param angle 
+ * @return float 
+ */
 float Kinematic::normalize_angle(float angle)
 {
     while (angle > PI)
