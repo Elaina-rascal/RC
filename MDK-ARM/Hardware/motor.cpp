@@ -62,7 +62,7 @@ void Motor3508_t::update()
     //获得控制量
     int16_t control = pid.update(_vel_raw.data_int);
     _common_buffer[(_id - 1) % 4 * 2] = (control >> 8) & 0xFF;
-    _common_buffer[(_id - 1) % 4 * 2]+1 = (control) & 0xFF;
+    _common_buffer[(_id - 1) % 4 * 2+1 ] = (control) & 0xFF;
     //发送can报文
     if (have_tx_permission)
     {
