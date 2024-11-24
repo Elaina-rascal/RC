@@ -1,9 +1,6 @@
 rc/heap_4.o: \
   ..\Middlewares\Third_Party\FreeRTOS\Source\portable\MemMang\heap_4.c \
-  D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\stdlib.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h \
-  D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\stddef.h \
-  D:\TOOLS\KEIL5\ARM\ARMCLANG\Bin\..\include\stdint.h \
   ..\Core\Inc\FreeRTOSConfig.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\projdefs.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\portable.h \
