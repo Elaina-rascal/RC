@@ -1,24 +1,22 @@
-/*
- * @Author: Elaina
- * @Date: 2024-09-08 14:56:31
- * @LastEditors: chaffer-cold 1463967532@qq.com
- * @LastEditTime: 2024-09-27 14:35:57
- * @FilePath: \MDK-ARM\Hardware\motor.h
- * @Description:
- *
- * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved.
+/**
+ * @file motor.h
+ * @author Elaina (1463967532@qq.com)
+ * @brief 这是电机的驱动文件,包括舵轮分控与C620电调
+ * @version 0.1
+ * @date 2024-11-24
+ * 
+ * @copyright Copyright (c) 2024
+ * 
  */
 #ifndef __MOTOR_H
 #define __MOTOR_H
 #define USE_CAN_Motor 1 // 使用CAN电机
 #define USE_3508 1
-#define USE_CAN_AbsoluteMotor 0  // 使用CAN绝对编码电机
 #define USE_SteeringWheelModel 1 // 使用舵轮模块
 #define USE_Debug 1              // 使用调试
 #include "common.h"
 #include "pid_template.h"
-namespace Motor
-{
+
     union data_t
     {
         uint8_t data_raw[4];
@@ -143,66 +141,8 @@ namespace Motor
         int16_t vel_factor = 2000;
         float angle_zero = PI / 2;
     };
-}
+
 #endif
-#endif
-/*与2006绝对式编码器相关部分*/
-// 2006的基础派生类
-/*与绝对编码相关的部分没写完*/
-#if USE_CAN_AbsoluteMotor
-class Motor2006_Interface_t
-{
-public:
-    Motor2006_Interface_t()
-    {
-    }
-    Motor2006_Interface_t(SPI_HandleTypeDef *spi, GPIO_TypeDef *cs_port, uint16_t cs_pin, int16_t zero_data)
-    {
-        _spi = spi;
-        _cs_port = cs_port;
-        _cs_pin = cs_pin;
-        absolute_angle_zero = zero_data;
-    }
-    void angle_update(int16_t relative_angle);
-    void angle_update();
-
-protected:
-    int16_t absolute_angle_max = 16383; // 绝对编码器的最大值
-    int16_t absolute_angle_raw;         // 绝对编码器的原始值
-    int16_t absolute_angle_zero;        // 绝对式编码器原点
-
-    int16_t Turns_num;                 // 转动的圈数
-    int16_t Last_relative_angle;       // 上一次的相对角度
-    int16_t relative_angle_max = 8192; // 相对编码器的最大值
-    float Turns_factor;                // 从圈数转化到角度的系数
-    float real_angle;                  // 最后的当前真实角度
-
-private:
-    uint16_t SPI_ReadWriteByte(uint16_t TxData);
-    SPI_HandleTypeDef *_spi;
-    GPIO_TypeDef *_cs_port;
-    uint16_t _cs_pin;
-};
-class Motor2006_t : public Motor_t, public Motor2006_Interface_t
-{
-public:
-    Motor2006_t(SPI_HandleTypeDef *spi, GPIO_TypeDef *cs_port, uint16_t cs_pin, int16_t zero_data) : Motor2006_Interface_t(spi, cs_port, cs_pin, zero_data)
-    {
-        Motor2006_t();
-    }
-    Motor2006_t()
-    {
-        _type = Motor2006;
-        pid.pid_update(5, 1.4, 0.5); // 6002 pid参数
-    }
-    void set_angle_target(float target);
-    void AngleControlUpdate();
-
-private:
-    float zero_angle;
-    float angle_target;
-    pid_base_template_t<int16_t, float> angle_pid = pid_base_template_t<int16_t, float>({0.1, 0, 0, -60, 60, 2000});
-};
 #endif
 
 #endif

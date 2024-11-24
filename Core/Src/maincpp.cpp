@@ -13,7 +13,7 @@
 #include <stdarg.h>
 #include "string.h"
 uint8_t common_buffer[8] = {0};
-Motor::MotorModule_t module[4] = {
+MotorModule_t module[4] = {
     {&hcan1, 3}, {&hcan1, 2}, {&hcan1, 1}, {&hcan1, 0}};
 Kinematic::Kinematic_t kinematic;
 TaskHandle_t Motor_Handle;

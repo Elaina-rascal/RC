@@ -1,19 +1,14 @@
-/*
- * @Author: Elaina
- * @Date: 2024-09-08 14:56:31
- * @LastEditors: chaffer-cold 1463967532@qq.com
-<<<<<<< HEAD
- * @LastEditTime: 2024-09-14 23:12:16
-=======
- * @LastEditTime: 2024-09-29 16:42:37
->>>>>>> 2f19990 (修改了bug添加了ignore)
- * @FilePath: \MDK-ARM\Hardware\motor.cpp
- * @Description:
- *
- * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved.
+/**
+ * @file motor.cpp
+ * @author Elaina (1463967532@qq.com)
+ * @brief 这是电机的驱动文件,包括舵轮分控与C620电调
+ * @version 0.1
+ * @date 2024-11-24
+ * 
+ * @copyright Copyright (c) 2024
+ * 
  */
 #include "motor.h"
-using namespace Motor;
 #if USE_CAN_Motor
 void MotorCanBase_t::CanSend(uint8_t *data, uint8_t len, uint32_t id)
 {
@@ -54,17 +49,6 @@ void Motor3508_t::update()
 }
 #endif
 #if USE_SteeringWheelModel
-// void MotorModule_t::set_target(int16_t vel_target, int16_t angle_target)
-// {
-//     _vel_target_union.data_int = vel_target;
-//     _angle_target_union.data_int = angle_target;
-//     uint8_t data[8];
-//     data[0] = ((int16_t)_angle_target_union.data_int) >> 8;
-//     data[1] = (int16_t)_angle_target_union.data_int;
-//     data[2] = ((int16_t)_vel_target_union.data_int) >> 8;
-//     data[3] = (int16_t)_vel_target_union.data_int;
-//     CanSend(data, 8, _id);
-// }
 float MotorModule_t::normalize_angle(float angle)
 {
     while (angle > PI)
@@ -112,58 +96,4 @@ void MotorModule_t::set_target(float vel_target, float angle_target, bool use_yo
 }
 #endif
 #endif
-#if USE_CAN_AbsoluteMotor
-/**
- * @brief 用SPI来获得电机的角度数据
- * @return {*}
- * @note:
- */
-void Motor2006_Interface_t::angle_update(int16_t relative_angle)
-{
 
-    //     int16_t relative_angle_data = *((int16_t *)relative_angle);
-}
-void Motor2006_Interface_t::angle_update()
-{
-    uint16_t data;
-    SPI_ReadWriteByte(0xFFFF);
-    data = SPI_ReadWriteByte(0xFFFF);
-    data &= 0x3FFF;
-    //     if(data>=absolute_angle_zero)
-    //     {
-    //         absolute_angle_raw=data-absolute_angle_zero;
-    //     }
-    //     else
-    //     {
-    //         absolute_angle_raw=
-    //     }
-    (data >= absolute_angle_zero) ? absolute_angle_raw = data - absolute_angle_zero : absolute_angle_raw = data - absolute_angle_zero + absolute_angle_max;
-}
-uint16_t Motor2006_Interface_t::SPI_ReadWriteByte(uint16_t TxData)
-{
-    uint16_t rx_data;
-    HAL_GPIO_WritePin(_cs_port, _cs_pin, GPIO_PIN_RESET);
-    if (HAL_SPI_TransmitReceive(_spi, (uint8_t *)&TxData, (uint8_t *)&rx_data, 1, 1000) != HAL_OK)
-    {
-        rx_data = 0;
-    }
-    HAL_GPIO_WritePin(_cs_port, _cs_pin, GPIO_PIN_SET);
-    return rx_data;
-}
-
-void Motor2006_t::set_angle_target(float target)
-{
-    angle_target = target * angle_fator;
-    angle_pid.target_update(angle_target);
-}
-void Motor2006_t::AngleControlUpdate()
-{
-    update();
-    // 算出当前最近的角度
-    int16_t angle_close = (_angle_raw - (int16_t)angle_target) > angle_raw_max / 2 ? _angle_raw - angle_raw_max : _angle_raw;
-    int16_t control = angle_pid.update(angle_close);
-    Motor_t::set_speed_target(control);
-
-    Motor_t::ControlUpdate();
-}
-#endif
